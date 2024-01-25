@@ -1,15 +1,12 @@
 import {DndContext} from "@dnd-kit/core";
-import React, {useState} from "react";
 import NodeLayer from "./NodeLayer";
 import Node from "./Node";
 import RemoveFromList from "./utils";
 
-export default function DialobildCanvas(){
+export default function DialobildCanvas(props){
 
-    const initialLayers = [["layer_1", ["node_1", "node_2", "node_3", "node_4"]], ["layer_2", []]]
 
-    const [layers, setLayers] = useState(initialLayers)
-    const [lastLayer, setLastLayer] = useState(3)
+    const [layers, setLayers] = props.layersControl
 
     return (
         <DndContext onDragEnd={moveNode}>
@@ -50,10 +47,12 @@ export default function DialobildCanvas(){
                     }
                 }
 
-
                 if (newLayers[newLayers.length-1][1].length !== 0){
-                    newLayers.push(["layer_"+lastLayer, []]);
-                    setLastLayer(lastLayer+1)
+
+                    let layer_id = "layer_"+(1+Number(newLayers[newLayers.length-1][0].slice(6)));
+
+
+                    newLayers.push([layer_id, []]);
                 }
 
                 return newLayers;

@@ -6,12 +6,28 @@ import DialobildCanvas from "./DialobildCanvas";
 
 
 function App() {
+
+
+
+
+    const initialLayers = [["layer_1", ["node_1", "node_2", "node_3", "node_4"]], ["layer_2", []]]
+
+    const [layers, setLayers] = useState(initialLayers)
+
     return (
     <div className="App">
-        <DialobildCanvas/>
+        <button id="add_node" onClick={AddNode}>
+            NEW
+        </button>
+        <DialobildCanvas layersControl={[layers, setLayers]}/>
 
     </div>
     );
+
+
+    function AddNode(){
+
+    }
 
 
 }
