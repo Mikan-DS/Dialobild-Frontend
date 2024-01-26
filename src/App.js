@@ -2,33 +2,26 @@ import React, {useState} from 'react';
 import './App.css';
 import DnDExample from "./DnDExample";
 import DialobildCanvas from "./DialobildCanvas";
-
+import useNodes from "./useNodes";
+import NodeMap from "./NodeMap";
+import NodePreview from "./NodePreview";
 
 
 function App() {
 
 
+    const nodes = useNodes()
 
 
-    const initialLayers = [["layer_1", ["node_1", "node_2", "node_3", "node_4"]], ["layer_2", []]]
-
-    const [layers, setLayers] = useState(initialLayers)
 
     return (
     <div className="App">
-        <button id="add_node" onClick={AddNode}>
-            NEW
-        </button>
-        <DialobildCanvas layersControl={[layers, setLayers]}/>
+
+        <NodeMap nodes={nodes}/>
+        <NodePreview nodes={nodes}/>
 
     </div>
     );
-
-
-    function AddNode(){
-
-    }
-
 
 }
 

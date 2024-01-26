@@ -1,0 +1,49 @@
+{
+  "nodes": [
+    [
+      {
+        "id": 1,
+        "content": "Пример ноды номер 1",
+        "node_type": "question",
+        "links": {
+          "must_have": [],
+          "disallow": []
+        }
+      },
+      {
+        "id": 2,
+        "content": "Пример ноды номер 2",
+        "node_type": "question",
+        "links": {
+          "must_have": [],
+          "disallow": []
+        }
+      }
+    ],
+    [
+      {
+        "id": 3,
+        "content": "Пример ноды номер 3",
+        "node_type": "question",
+        "links": {
+          "must_have": [],
+          "disallow": []
+        }
+      },
+      {
+        "id": 4,
+        "content": "Пример ноды номер 4",
+        "node_type": "question",
+        "links": {
+          "must_have": [],
+          "disallow": []
+        }
+      }
+    ]
+  ],
+  "node_types": {
+    "question": {
+      "color": "#F995"
+    }
+  }
+}
