@@ -23,8 +23,7 @@ export default function Node(props) {
 
         </button>
 
-    )
-        ;
+    );
 
 
 }

@@ -26,7 +26,7 @@
         "content": "Пример ноды номер 3",
         "node_type": "question",
         "links": {
-          "must_have": [],
+          "must_have": [1, 2],
           "disallow": []
         }
       },
@@ -35,8 +35,8 @@
         "content": "Пример ноды номер 4",
         "node_type": "question",
         "links": {
-          "must_have": [],
-          "disallow": []
+          "must_have": [1],
+          "disallow": [3]
         }
       }
     ]
