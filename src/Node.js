@@ -15,6 +15,7 @@ export default function Node(props) {
 
     return (
         <button className="Node"
+                id={"node_"+props.id}
                 ref={setNodeRef}
                 {...listeners}
                 {...attributes}

@@ -76,6 +76,34 @@ export default function useNodes(){
     }
 
 
+    function getLinks(){
+
+
+        let links = {
+            must_have: [],
+            disallow: []
+        }
+
+        console.log(nodes.length)
+        for (let i = 0; i<nodes.length; i++){
+            const node = nodes[i];
+            const node_id = "node_"+node.id
+
+            for (let j = 0; i<node.links.must_have.length; j++){
+                links.must_have.push([node_id, "node_"+node.links.must_have[j]])
+            }
+            for (let j = 0; i<node.links.disallow.length; j++){
+                links.disallow.push([node_id, "node_"+node.links.disallow[j]])
+            }
+
+        }
+
+        return links;
+
+
+    }
+
+
     return {
         nodesLayers: nodeLayers,
         addNode: addNode,
@@ -85,6 +113,10 @@ export default function useNodes(){
         activeNode: activeNode,
         setActiveNode: setActiveNode,
         nodeClickHandler: nodeClickHandler,
-        nodesList: nodes,
-        getActiveNode: getActiveNode}
+        nodesList: nodes, // это не лист
+        getActiveNode: getActiveNode,
+        getLinks: getLinks
+
+
+    }
 }
