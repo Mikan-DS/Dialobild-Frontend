@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
 import './App.css';
+import DialobildCanvas from "./DialobildCanvas";
+import useDialobild from "./useDialobild";
 
 
 function App() {
 
-
+    const dialobild = useDialobild()
 
     return (
     <div className="App">
 
-        TEST
+        <DialobildCanvas dialobild={dialobild}/>
 
     </div>
     );
