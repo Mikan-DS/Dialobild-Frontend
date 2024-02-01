@@ -6,18 +6,26 @@ export default function Layer(props) {
         borderRadius: '10px',
         backgroundColor: 'beige',
 
-        display: 'inline-flex',
+        // padding: 20,
+
+        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-
+        //
         marginTop: "20px",
+        // width: 3333,
 
+        //
         minWidth: "100%",
-        width: "100px",
 
+
+
+        // width: "100px",
+        // width: "100%",
+        //
         minHeight: '70px',
         height: '1px',
-
+        //
         gap: "10px",
 
     };

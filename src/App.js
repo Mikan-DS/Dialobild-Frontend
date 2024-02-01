@@ -1,6 +1,7 @@
 import './App.css';
 import DialobildCanvas from "./DialobildCanvas";
 import useDialobild from "./useDialobild";
+import DebugContainer from "./DebugContainer";
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     <div className="App">
 
         <DialobildCanvas dialobild={dialobild}/>
+        {/*<DebugContainer/>*/}
 
     </div>
     );
