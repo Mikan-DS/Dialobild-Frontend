@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Layer from './Layer';
 import Xarrow, {useXarrow, Xwrapper} from "react-xarrows";
+import NodeArrow from "./NodeArrow";
 
 export default function DialobildCanvas(props) {
     const style = {
@@ -55,6 +56,7 @@ export default function DialobildCanvas(props) {
                     ))}
                 </Xwrapper>
             </div>
+            <NodeArrow startId="createClearNode" endId="node_1"></NodeArrow>
         </div>
     );
 }

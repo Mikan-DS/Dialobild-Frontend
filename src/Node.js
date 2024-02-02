@@ -11,7 +11,7 @@ export default function Node(props) {
 
     return (
         <div id={"node_"+props.node.id} style={style} className="Node">
-            <Xarrow start="createClearNode" end={"node_"+props.node.id}></Xarrow>
+            {/*<Xarrow start="createClearNode" end={"node_"+props.node.id}></Xarrow>*/}
         </div>
     );
 }
