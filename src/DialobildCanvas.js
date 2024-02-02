@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Layer from './Layer';
 import Xarrow, {useXarrow, Xwrapper} from "react-xarrows";
 import NodeArrow from "./NodeArrow";
@@ -36,16 +36,31 @@ export default function DialobildCanvas(props) {
 
             action();
             // updateXarrow();
-            setArrowUpdated(false)
+            // setArrowUpdated(!isArrowUpdated)
         }
 
         return updateScreen
 
     }
 
+    useEffect(() => {
+
+        setArrowUpdated(!isArrowUpdated)
+
+    }, [
+        document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width,
+        document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().x,
+        document.getElementById("DialobildCanvas") && document.getElementById("DialobildCanvas").getBoundingClientRect().width,
+        document.getElementById("DialobildCanvas") && document.getElementById("DialobildCanvas").getBoundingClientRect().x
+
+    ]);
+
+    // console.log(document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect())
+
+
     return (
         <div style={style} className="DialobildCanvas">
-            <div style={styleContainer}>
+            <div style={styleContainer}  id="DialobildCanvasContainer">
                 <Xwrapper>
 
                     <button id="createClearNode" onClick={withUpdateScreen(props.dialobild.createClearNode)}>
@@ -56,7 +71,7 @@ export default function DialobildCanvas(props) {
                     ))}
                 </Xwrapper>
             </div>
-            <NodeArrow startId="createClearNode" endId="node_1"></NodeArrow>
+            <NodeArrow startId="createClearNode" endId="node_1" nodeState={isArrowUpdated}></NodeArrow>
         </div>
     );
 }

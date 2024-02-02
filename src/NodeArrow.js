@@ -9,11 +9,11 @@ function NodeArrowHead({pointPos}) {
 }
 
 
-export default function NodeArrow({ startId, endId }) {
+export default function NodeArrow({ startId, endId, nodeState }) {
     const [start, setStart] = useState({x: 0, y: 0});
     const [end, setEnd] = useState({x: 0, y: 0});
 
-    const [nodeState, setNodeState] = useState(true); //TODO: Это бы исправить чтобы не каждую секунду обновляло
+    // const [nodeState, setNodeState] = useState(true); //TODO: Это бы исправить чтобы не каждую секунду обновляло
 
     useEffect(() => {
         const startElement = document.getElementById(startId);
@@ -29,7 +29,7 @@ export default function NodeArrow({ startId, endId }) {
                 y: endElement.getBoundingClientRect().top,
             });
         }
-    },[start, end, nodeState, startId, endId]);
+    },[startId, endId, nodeState]);//, nodeState
 
     return (
         <svg style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
