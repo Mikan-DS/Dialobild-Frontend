@@ -32,7 +32,7 @@ export default function Layer(props) {
 
 
     return (
-        <div style={style} className="Layer">
+        <div id={"layer_" + props.layer.y}  style={style} className="Layer">
             {props.layer.nodes.map((node, index, arr) => {
                 const isLast = index === arr.length - 1;
                 return (

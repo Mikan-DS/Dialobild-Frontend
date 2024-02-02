@@ -1,4 +1,5 @@
 import React from 'react';
+import Xarrow from "react-xarrows";
 
 export default function Node(props) {
     const style = {
@@ -9,8 +10,8 @@ export default function Node(props) {
     };
 
     return (
-        <div style={style} className="Node">
-
+        <div id={"node_"+props.node.id} style={style} className="Node">
+            <Xarrow start="createClearNode" end={"node_"+props.node.id}></Xarrow>
         </div>
     );
 }
