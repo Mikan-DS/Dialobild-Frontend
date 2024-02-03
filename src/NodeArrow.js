@@ -9,56 +9,36 @@ function NodeArrowHead({pointPos}) {
 }
 
 
-export default function NodeArrow({ startId, endId, nodeState }) {
+export default function NodeArrow({ startId, endId, updateArrows }) {
     const [start, setStart] = useState({x: 0, y: 0});
     const [end, setEnd] = useState({x: 0, y: 0});
 
-    useEffect(() => {
-
+    const updateArrow = () => {
         const startElement = document.getElementById(startId);
         const endElement = document.getElementById(endId);
         if (startElement && endElement) {
-
             let newStart = {
-                    x: startElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
-                    y: startElement.getBoundingClientRect().bottom,
-                };
+                x: startElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
+                y: startElement.getBoundingClientRect().bottom,
+            };
             let newEnd = {
-                    x: endElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
-                    y: endElement.getBoundingClientRect().top,
-                };
+                x: endElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
+                y: endElement.getBoundingClientRect().top,
+            };
 
             if (newStart.x !== start.x || newEnd.x !== end.x || newStart.y !== start.y || newEnd.y !== end.y){
                 setStart(newStart);
                 setEnd(newEnd);
             }
-
         }
-    });//, nodeState, nodeState,,[startId, endId]
+    };
+
+    updateArrows.push(updateArrow)
+
+    useEffect(updateArrow); // Проверяет один раз за рендер
 
     useEffect(() => {
-        const updateArrow = () => {
-            const startElement = document.getElementById(startId);
-            const endElement = document.getElementById(endId);
-            // setNodeState(!nodeState)
-            if (startElement && endElement) {
 
-                let newStart = {
-                    x: startElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
-                    y: startElement.getBoundingClientRect().bottom,
-                };
-                let newEnd = {
-                    x: endElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
-                    y: endElement.getBoundingClientRect().top,
-                };
-
-                if (newStart.x !== start.x || newEnd.x !== end.x || newStart.y !== start.y || newEnd.y !== end.y){
-                    setStart(newStart);
-                    setEnd(newEnd);
-                }
-
-            }
-        };
         window.addEventListener('resize', updateArrow);
         window.addEventListener('scroll', updateArrow);
 
@@ -74,7 +54,7 @@ export default function NodeArrow({ startId, endId, nodeState }) {
                 canvas.removeEventListener('scroll', updateArrow);
             }
         };
-    }, []);
+    }, []); // Следит за изменениями после рендера
 
 
     return (

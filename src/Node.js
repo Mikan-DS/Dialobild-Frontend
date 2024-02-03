@@ -1,16 +1,27 @@
 import React from 'react';
-import Xarrow from "react-xarrows";
+import {useDraggable} from "@dnd-kit/core";
+import {CSS} from '@dnd-kit/utilities';
 
 export default function Node(props) {
+
+
+    const nodeId = "node_"+props.node.id;
+
+    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+        id: nodeId,
+    });
+
     const style = {
         backgroundColor: 'grey',
         borderRadius: '10px',
         width: '100px',
         height: '50px',
+
+        transform: CSS.Translate.toString(transform),
     };
 
     return (
-        <div id={"node_"+props.node.id} style={style} className="Node">
+        <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...listeners} {...attributes}>
             {/*<Xarrow start="createClearNode" end={"node_"+props.node.id}></Xarrow>*/}
         </div>
     );

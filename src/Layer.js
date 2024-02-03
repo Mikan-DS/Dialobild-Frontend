@@ -43,6 +43,7 @@ export default function Layer(props) {
                     </React.Fragment>
                 );
             })}
+            {props.layer.nodes.length===0 && <Cell dialobild={props.dialobild} />}
         </div>
     );
 }

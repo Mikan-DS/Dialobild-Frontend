@@ -5,8 +5,9 @@ export default function Cell(props) {
     const style = {
         backgroundColor: 'lightpink',
         minHeight: '100%',
-        minWidth: '100px',
-        width: "100px"
+        minWidth: '30px',
+        display: "flex",
+        // width: "10px"
     };
     return (
         <div style={style} className="Cell">
