@@ -43,23 +43,33 @@ export default function DialobildCanvas(props) {
 
     }
 
-    useEffect(() => {
-
-        setArrowUpdated(!isArrowUpdated)
-
-    }, [
-        document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width,
-        document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().x,
-        document.getElementById("DialobildCanvas") && document.getElementById("DialobildCanvas").getBoundingClientRect().width,
-        document.getElementById("DialobildCanvas") && document.getElementById("DialobildCanvas").getBoundingClientRect().x
-
-    ]);
-
-    // console.log(document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect())
+    // useEffect(() => {
+    //
+    //     setArrowUpdated(!isArrowUpdated)
+    //
+    // }, [
+    //     document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width,
+    //     document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().x,
+    //     document.getElementById("DialobildCanvas") && document.getElementById("DialobildCanvas").getBoundingClientRect().width,
+    //     document.getElementById("DialobildCanvas") && document.getElementById("DialobildCanvas").getBoundingClientRect().x
+    //
+    // ]);
+    //
+    // // console.log(document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect())
+    //
+    // const [currentName, setCurrentName] = useState("TEST")
+    // //
+    // useEffect(() => {
+    //     console.log(currentName)
+    //     if (isArrowUpdated){
+    //         setArrowUpdated(false);
+    //         setCurrentName(currentName+"1")
+    //     }
+    // });
 
 
     return (
-        <div style={style} className="DialobildCanvas">
+        <div style={style} className="DialobildCanvas" id="DialobildCanvas">
             <div style={styleContainer}  id="DialobildCanvasContainer">
                 <Xwrapper>
 
@@ -71,7 +81,8 @@ export default function DialobildCanvas(props) {
                     ))}
                 </Xwrapper>
             </div>
-            <NodeArrow startId="createClearNode" endId="node_1" nodeState={isArrowUpdated}></NodeArrow>
+            <NodeArrow startId="createClearNode" endId="node_1"></NodeArrow>
+            {/*{currentName} nodeState={isArrowUpdated}*/}
         </div>
     );
 }

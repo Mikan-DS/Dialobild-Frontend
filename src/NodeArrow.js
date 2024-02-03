@@ -14,22 +14,77 @@ export default function NodeArrow({ startId, endId, nodeState }) {
     const [end, setEnd] = useState({x: 0, y: 0});
 
     // const [nodeState, setNodeState] = useState(true); //TODO: Это бы исправить чтобы не каждую секунду обновляло
-
+    //
     useEffect(() => {
+        // console.log("TEST")
+
+
         const startElement = document.getElementById(startId);
         const endElement = document.getElementById(endId);
         // setNodeState(!nodeState)
         if (startElement && endElement) {
-            setStart({
-                x: startElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
-                y: startElement.getBoundingClientRect().bottom,
-            });
-            setEnd({
-                x: endElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
-                y: endElement.getBoundingClientRect().top,
-            });
+
+            let newStart = {
+                    x: startElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
+                    y: startElement.getBoundingClientRect().bottom,
+                };
+            let newEnd = {
+                    x: endElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
+                    y: endElement.getBoundingClientRect().top,
+                };
+
+            if (newStart.x !== start.x || newEnd.x !== end.x || newStart.y !== start.y || newEnd.y !== end.y){
+                // console.log("NEED UPDATE")
+                setStart(newStart);
+                setEnd(newEnd);
+            }
+
         }
-    },[startId, endId, nodeState]);//, nodeState
+    });//, nodeState, nodeState,,[startId, endId]
+
+    useEffect(() => {
+        const updateArrow = () => {
+            const startElement = document.getElementById(startId);
+            const endElement = document.getElementById(endId);
+            // setNodeState(!nodeState)
+            if (startElement && endElement) {
+
+                let newStart = {
+                    x: startElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
+                    y: startElement.getBoundingClientRect().bottom,
+                };
+                let newEnd = {
+                    x: endElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width/2,
+                    y: endElement.getBoundingClientRect().top,
+                };
+
+                if (newStart.x !== start.x || newEnd.x !== end.x || newStart.y !== start.y || newEnd.y !== end.y){
+                    // console.log("NEED UPDATE")
+                    setStart(newStart);
+                    setEnd(newEnd);
+                }
+
+            }
+        };
+        window.addEventListener('resize', updateArrow);
+        window.addEventListener('scroll', updateArrow);
+
+        const canvas = document.getElementById("DialobildCanvas")
+        if (canvas){
+            canvas.addEventListener('scroll', updateArrow);
+        }
+
+
+
+        return () => {
+            window.removeEventListener('resize', updateArrow);
+            window.removeEventListener('scroll', updateArrow);
+            if (canvas){
+                canvas.removeEventListener('scroll', updateArrow);
+            }
+        };
+    }, []);
+
 
     return (
         <svg style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
