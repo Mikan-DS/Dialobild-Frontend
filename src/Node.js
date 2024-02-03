@@ -2,13 +2,14 @@ import React from 'react';
 import {useDraggable} from "@dnd-kit/core";
 import {CSS} from '@dnd-kit/utilities';
 
-export default function Node(props) {
+export default function Node({node, dialobild}) {
 
 
-    const nodeId = "node_"+props.node.id;
+    const nodeId = "node_"+node.id;
 
     const {attributes, listeners, setNodeRef, transform} = useDraggable({
         id: nodeId,
+        data: {node}
     });
 
     const style = {

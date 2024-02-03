@@ -33,7 +33,7 @@ export default function NodeArrow({ startId, endId, updateArrows }) {
         }
     };
 
-    updateArrows.push(updateArrow)
+    updateArrows.push(updateArrow); // Обновляет рендер из вне
 
     useEffect(updateArrow); // Проверяет один раз за рендер
 

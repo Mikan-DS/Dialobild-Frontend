@@ -4,7 +4,7 @@ import Xarrow, {useXarrow, Xwrapper} from "react-xarrows";
 import NodeArrow from "./NodeArrow";
 import {DndContext} from "@dnd-kit/core";
 
-export default function DialobildCanvas(props) {
+export default function DialobildCanvas({dialobild}) {
     const style = {
         overflowX: 'auto',
         width: 'auto',
@@ -34,13 +34,13 @@ export default function DialobildCanvas(props) {
 
     return (
         <div style={style} className="DialobildCanvas" id="DialobildCanvas">
-            <DndContext onDragMove={updateArrows} onDragEnd={updateArrows} onDragStart={updateArrows}>
+            <DndContext onDragMove={updateArrows} onDragEnd={(event) => {updateArrows(); dialobild.moveNodeToCell(event)}} onDragStart={updateArrows}>
                 <div style={styleContainer} id="DialobildCanvasContainer">
-                    <button id="createClearNode" onClick={props.dialobild.createClearNode}>
+                    <button id="createClearNode" onClick={dialobild.createClearNode}>
                         Создать
                     </button>
-                    {props.dialobild.getLayers().map((layer, index) => (
-                        <Layer key={"layer_" + layer.y} layer={layer} dialobild={props.dialobild}/>
+                    {dialobild.getLayers().map((layer, index) => (
+                        <Layer key={"layer_" + layer.y} layer={layer} dialobild={dialobild}/>
                     ))}
                 </div>
                 <NodeArrow startId="createClearNode" endId="node_1" updateArrows={arrowUpdates}></NodeArrow>

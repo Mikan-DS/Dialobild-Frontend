@@ -6,6 +6,8 @@ function App() {
 
     const dialobild = useDialobild()
 
+    document.dd = dialobild;
+
     return (
     <div className="App">
 
