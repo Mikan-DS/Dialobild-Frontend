@@ -13,15 +13,10 @@ export default function NodeArrow({ startId, endId, nodeState }) {
     const [start, setStart] = useState({x: 0, y: 0});
     const [end, setEnd] = useState({x: 0, y: 0});
 
-    // const [nodeState, setNodeState] = useState(true); //TODO: Это бы исправить чтобы не каждую секунду обновляло
-    //
     useEffect(() => {
-        // console.log("TEST")
-
 
         const startElement = document.getElementById(startId);
         const endElement = document.getElementById(endId);
-        // setNodeState(!nodeState)
         if (startElement && endElement) {
 
             let newStart = {
@@ -34,7 +29,6 @@ export default function NodeArrow({ startId, endId, nodeState }) {
                 };
 
             if (newStart.x !== start.x || newEnd.x !== end.x || newStart.y !== start.y || newEnd.y !== end.y){
-                // console.log("NEED UPDATE")
                 setStart(newStart);
                 setEnd(newEnd);
             }
@@ -59,7 +53,6 @@ export default function NodeArrow({ startId, endId, nodeState }) {
                 };
 
                 if (newStart.x !== start.x || newEnd.x !== end.x || newStart.y !== start.y || newEnd.y !== end.y){
-                    // console.log("NEED UPDATE")
                     setStart(newStart);
                     setEnd(newEnd);
                 }
@@ -73,8 +66,6 @@ export default function NodeArrow({ startId, endId, nodeState }) {
         if (canvas){
             canvas.addEventListener('scroll', updateArrow);
         }
-
-
 
         return () => {
             window.removeEventListener('resize', updateArrow);
@@ -91,6 +82,5 @@ export default function NodeArrow({ startId, endId, nodeState }) {
             <line x1={start.x} y1={start.y} x2={end.x} y2={end.y-10} style={{stroke: "black", strokeWidth: 2}}/>
             <NodeArrowHead pointPos={end}/>
         </svg>
-
     );
 };
