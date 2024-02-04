@@ -55,7 +55,11 @@ export default function Node({node, dialobild}) {
         height: 30,
         padding: 5,
         visibility: active? "hidden": "visible",
-        alignSelf: "center"
+        alignSelf: "center",
+
+        border: "none",
+        background: "transparent"
+
     }
 
     const location = node.location

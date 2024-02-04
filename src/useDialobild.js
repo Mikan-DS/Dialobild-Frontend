@@ -3,29 +3,31 @@ import { useState } from 'react';
 export default function useDialobild() {
     const [nodes, setNodes] = useState([]);
 
-    function createClearNode() {
-        const id = nodes.length === 0 ? 1 : Math.max(...nodes.map(node => node.id)) + 1;
-        let x = 1;
-        const y = 1;
+    function createClearNode({x, y}) {
 
-        while(getNodeAtLocation(x, y)) {
-            x++;
+        const id = nodes.length === 0 ? 1 : Math.max(...nodes.map(node => node.id)) + 1;
+        // let x = 1;
+        // const y = 1;
+        const targetLocation = {x: x?x:1, y: y?y:1}
+
+        while(getNodeAtLocation(targetLocation.x, targetLocation.y)) {
+            targetLocation.x++;
         }
 
         const node_type = 'ask';
         const content = '???';
         const rules = {mustHave: [], mustNotHave: [], mustHaveAll: []};
         const statements = [];
-        const location = {x, y}
+        // const location = {x, y}
 
-        const newNode = { id, location, node_type, content, rules, statements };
+        const newNode = { id, location:targetLocation, node_type, content, rules, statements };
 
-        setNodes([...nodes, newNode]);
+        nodes.push(newNode)
+
+        setNodes([...nodes]);
 
         return newNode;
     }
-
-
 
 
     function getNodeAtLocation(x, y) {
@@ -72,6 +74,23 @@ export default function useDialobild() {
 
     }
 
+    function moveNodeToLocation({node, targetLocation}){
+        let lastNode = node
+        for (let i = targetLocation.x; i <= getWidth()+1; i++){
+            const currentNode = getNodeAtLocation(i, targetLocation.y)
+            lastNode.location = targetLocation;
+            if (!currentNode){
+                break;
+            }
+            else {
+                targetLocation = {x: targetLocation.x+1, y: targetLocation.y};
+                lastNode = currentNode;
+            }
+        }
+
+        setNodes([...nodes])
+    }
+
     function moveNodeToCell({active, over}){
 
         if (!over){
@@ -87,20 +106,8 @@ export default function useDialobild() {
 
         let targetLocation = {x: Math.floor(cellLocation.x/2)+1, y:cellLocation.y}
 
-        let lastNode = node
-        for (let i = targetLocation.x; i <= getWidth()+1; i++){
-            const currentNode = getNodeAtLocation(i, cellLocation.y)
-            lastNode.location = targetLocation;
-            if (!currentNode){
-                break;
-            }
-            else {
-                targetLocation = {x: targetLocation.x+1, y: targetLocation.y};
-                lastNode = currentNode;
-            }
-        }
+        moveNodeToLocation({node, targetLocation})
 
-        setNodes([...nodes])
     }
 
     function getLinks() {
@@ -108,7 +115,7 @@ export default function useDialobild() {
         const links = {mustHave: []}
 
         for (let i = 0; i<nodes.length; i++){
-            const node = nodes[i]
+            let node = nodes[i]
 
 
             if (node.rules.mustHave.length === 0){
@@ -118,7 +125,10 @@ export default function useDialobild() {
                 })
             }
             else {
-                for (let l; l<node.rules.mustHave.length;l++){
+                console.log(node.rules.mustHave)
+
+                for (let l = 0; l<node.rules.mustHave.length;l++){
+
                     const rule = node.rules.mustHave[l];
                     links.mustHave.push({
                         startId: "node_"+rule,
@@ -129,18 +139,29 @@ export default function useDialobild() {
 
         }
 
+        // console.log(links)
+
         return links;
 
     }
 
-    function createNewNode({node, targetLocation}) {
+    function addNewNodeToLocationWrap({node, targetLocation}) {
 
         function callback() {
             // node.content += `(${targetLocation.x}, ${targetLocation.y})`;
 
-            const newNode = createClearNode()
+            const newNode = createClearNode(targetLocation)
 
-            moveNodeToCell()
+            moveNodeToLocation({node: newNode, targetLocation})
+
+            if (node.location.y === targetLocation.y){
+                newNode.rules.mustHave = [...node.rules.mustHave]
+            }
+            else {
+                newNode.rules.mustHave.push(node.id)
+            }
+
+            setNodes([...nodes])
 
         }
 
@@ -158,6 +179,6 @@ export default function useDialobild() {
         moveNodeToCell,
         isAllowedCell,
         getLinks,
-        createNewNode
+        createNewNode: addNewNodeToLocationWrap
     }
 }
