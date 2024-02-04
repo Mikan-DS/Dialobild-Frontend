@@ -1,24 +1,19 @@
-import React, {useState} from 'react';
 import './App.css';
-import DnDExample from "./DnDExample";
 import DialobildCanvas from "./DialobildCanvas";
-import useNodes from "./useNodes";
-import NodeMap from "./NodeMap";
-import NodePreview from "./NodePreview";
-
+import useDialobild from "./useDialobild";
 
 function App() {
 
+    const dialobild = useDialobild()
 
-    const nodes = useNodes()
-
-
+    document.dd = dialobild;
 
     return (
     <div className="App">
 
-        <NodeMap nodes={nodes}/>
-        <NodePreview nodes={nodes}/>
+        <DialobildCanvas dialobild={dialobild}/>
+        {/*<DebugContainer/>*/}
+        {/*<CanvasButton></CanvasButton>*/}
 
     </div>
     );

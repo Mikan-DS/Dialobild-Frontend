@@ -1,66 +1,56 @@
+import React, {useEffect, useState} from 'react';
+import Layer from './Layer';
+import Xarrow, {useXarrow, Xwrapper} from "react-xarrows";
+import NodeArrow from "./NodeArrow";
 import {DndContext} from "@dnd-kit/core";
-import NodeLayer from "./NodeLayer";
-import Node from "./Node";
-import RemoveFromList from "./utils";
 
-export default function DialobildCanvas(props){
+export default function DialobildCanvas({dialobild}) {
+    const style = {
+        overflowX: 'auto',
+        width: 'auto',
+        display: 'flex',
+        flexWrap: 'wrap',
 
-
-    const [layers, setLayers] = props.layersControl
-
-    return (
-        <DndContext onDragEnd={moveNode}>
-            {layers.map(([layer, nodes]) =>
-                <NodeLayer key={layer} id={layer}>
-                    {nodes.map(node => <Node key={node} id={node} typeColor="#DAA7"/>)}
-                </NodeLayer>
-            )}
-        </DndContext>
-    );
+        justifyContent: 'center',
+        alignItems: 'center',
+    };
 
 
-    function moveNode(event){
-        const { active, over } = event;
+    const styleContainer = {
+        flexWrap: 'wrap',
+        display: 'flex',
 
-        if (over){
-            setLayers(layers => {
-                const newLayers = [...layers];
+        justifyContent: 'center',
+        alignItems: 'center',
 
-                for (const layer of newLayers) {
-                    if (layer[0] === over.id && layer[1].indexOf(active.id) !== -1){
-                        console.log("CURRENT "+layer[0])
-                        return newLayers;
-                    }
-                    if (RemoveFromList(layer[1], active.id)) {
-                        if (layer[1].length === 0){
-                            RemoveFromList(newLayers, layer)
-                        }
-                        break;
-                    }
+        gap: 70,
+    };
 
-                }
+    const links = dialobild.getLinks()
 
-                for (const layer of newLayers) {
-                    if (layer[0] === over.id) {
-                        layer[1].push(active.id);
-                        break;
-                    }
-                }
+    const arrowUpdates = []
 
-                if (newLayers[newLayers.length-1][1].length !== 0){
-
-                    let layer_id = "layer_"+(1+Number(newLayers[newLayers.length-1][0].slice(6)));
-
-
-                    newLayers.push([layer_id, []]);
-                }
-
-                return newLayers;
-            });
+    function updateArrows() {
+        for (let i = 0; i<arrowUpdates.length; i++){
+            arrowUpdates[i]();
         }
-
-
     }
 
-
+    return (
+        <div style={style} className="DialobildCanvas" id="DialobildCanvas">
+            <DndContext onDragMove={updateArrows} onDragEnd={(event) => {updateArrows(); dialobild.moveNodeToCell(event)}} onDragStart={updateArrows}>
+                <div style={styleContainer} id="DialobildCanvasContainer">
+                    <button id="createClearNode" onClick={dialobild.createClearNode}>
+                        Создать
+                    </button>
+                    {dialobild.getLayers().map((layer, index) => (
+                        <Layer key={"layer_" + layer.y} layer={layer} dialobild={dialobild}/>
+                    ))}
+                </div>
+                {links.mustHave.map((rule, index) => (
+                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>
+                ))}
+            </DndContext>
+        </div>
+    );
 }
