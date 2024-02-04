@@ -46,3 +46,17 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+---
+
+Прогресс:
+- [ ] Добавить боковое меню подробной настройки узла
+- [ ] Добавить реализацию и настройку связей `MustNotHave` и `MustHaveAll`
+- [ ] Связать с бэкэндом
+  - [ ] Выбор и создание проекта
+  - [ ] Выгрузка проекта
+    - [ ] DDP (Проект Dialobild)
+    - [ ] SS (структура для ShortStoryTellingEngine)
+    - [ ] SSC (заранее скомпилированный сценарий структура для ShortStoryTellingEngine)
+    - [ ] XML
+- [ ] Исправить баг стрелок с прогрузкой вниз
