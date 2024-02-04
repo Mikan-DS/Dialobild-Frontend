@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 
-function NodeArrowHead({pointPos}) {
+function NodeArrowHead({pointPos, arrowColor}) {
     return (
         <polygon className="NodeArrowHead"
                     points={`${pointPos.x},${pointPos.y} ${pointPos.x + 10},${pointPos.y - 10} ${pointPos.x - 10},${pointPos.y - 10}`}
-                    style={{fill: "black"}}/>
+                    style={{fill: arrowColor}}/>
     );
 }
 
 
-export default function NodeArrow({ startId, endId, updateArrows }) {
+export default function NodeArrow({ startId, endId, updateArrows, arrowColor}) {
     const [start, setStart] = useState({x: 0, y: 0});
     const [end, setEnd] = useState({x: 0, y: 0});
+
+    arrowColor = arrowColor? arrowColor: "black"
 
     const updateArrow = () => {
         const startElement = document.getElementById(startId);
@@ -59,8 +61,8 @@ export default function NodeArrow({ startId, endId, updateArrows }) {
 
     return (
         <svg style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex:-1}}>
-            <line x1={start.x} y1={start.y} x2={end.x} y2={end.y-10} style={{stroke: "black", strokeWidth: 2}}/>
-            <NodeArrowHead pointPos={end}/>
+            <line x1={start.x} y1={start.y} x2={end.x} y2={end.y-10} style={{stroke: arrowColor, strokeWidth: 2}}/>
+            <NodeArrowHead pointPos={end} arrowColor={arrowColor}/>
         </svg>
     );
 };

@@ -24,6 +24,8 @@ export default function DialobildCanvas({dialobild}) {
         alignItems: 'center',
     };
 
+    const links = dialobild.getLinks()
+
     const arrowUpdates = []
 
     function updateArrows() {
@@ -43,7 +45,9 @@ export default function DialobildCanvas({dialobild}) {
                         <Layer key={"layer_" + layer.y} layer={layer} dialobild={dialobild}/>
                     ))}
                 </div>
-                <NodeArrow startId="createClearNode" endId="node_1" updateArrows={arrowUpdates}></NodeArrow>
+                {links.mustHave.map((rule, index) => (
+                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>
+                ))}
             </DndContext>
         </div>
     );

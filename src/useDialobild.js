@@ -72,10 +72,14 @@ export default function useDialobild() {
 
     function moveNodeToCell({active, over}){
 
+        if (!over){
+            return;
+        }
+
         const node = active.data.current.node
         const cellLocation = over.data.current.cellLocation
 
-        if (!over || !isAllowedCell({activeNode: active, cellLocation: cellLocation} ) || (over.data.current.node && node.id === over.data.current.node.id)){
+        if (!isAllowedCell({activeNode: active, cellLocation: cellLocation} ) || (over.data.current.node && node.id === over.data.current.node.id)){
             return;
         }
 
@@ -97,6 +101,35 @@ export default function useDialobild() {
         setNodes([...nodes])
     }
 
+    function getLinks() {
+
+        const links = {mustHave: []}
+
+        for (let i = 0; i<nodes.length; i++){
+            const node = nodes[i]
+
+
+            if (node.rules.mustHave.length === 0){
+                links.mustHave.push({
+                    startId: "createClearNode",
+                    endId: "node_"+node.id
+                })
+            }
+            else {
+                for (let l; l<node.rules.mustHave.length;l++){
+                    const rule = node.rules.mustHave[l];
+                    links.mustHave.push({
+                        startId: "node_"+rule,
+                        endId: "node_"+node.id
+                    })
+                }
+            }
+
+        }
+
+        return links;
+
+    }
 
     return {
         nodes,
@@ -106,6 +139,7 @@ export default function useDialobild() {
         getLayers,
         getWidth,
         moveNodeToCell,
-        isAllowedCell
+        isAllowedCell,
+        getLinks
     }
 }

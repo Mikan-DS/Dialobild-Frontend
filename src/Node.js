@@ -13,20 +13,20 @@ export default function Node({node, dialobild}) {
     });
 
     const style = {
-        backgroundColor: 'grey',
+        backgroundColor: '#93af93',
         borderRadius: '10px',
-        width: '100px',
-        height: '50px',
+        minWidth: '100px',
+        minHeight: '50px',
+        padding: 10,
 
         transform: CSS.Translate.toString(transform),
     };
 
     return (
-        <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...listeners} {...attributes}>
-            {/*<Xarrow start="createClearNode" end={"node_"+props.node.id}></Xarrow>*/}
-            node_{node.id}
-            <p/>
-            {node.location.x}
+        <div className="NodeHolder">
+            <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...listeners} {...attributes}>
+                {node.content}
+            </div>
         </div>
     );
 }

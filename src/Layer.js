@@ -12,7 +12,7 @@ export default function Layer({layer, dialobild}) {
         justifyContent: 'center',
         alignItems: 'center',
         //
-        marginTop: "20px",
+        marginTop: 40,
         // width: 3333,
 
         //
@@ -26,7 +26,7 @@ export default function Layer({layer, dialobild}) {
         minHeight: '70px',
         height: '1px',
         //
-        gap: "10px",
+        gap: 10,
 
     };
 
