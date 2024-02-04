@@ -22,6 +22,8 @@ export default function DialobildCanvas({dialobild}) {
 
         justifyContent: 'center',
         alignItems: 'center',
+
+        gap: 70,
     };
 
     const links = dialobild.getLinks()

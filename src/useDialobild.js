@@ -21,6 +21,8 @@ export default function useDialobild() {
         const newNode = { id, location, node_type, content, rules, statements };
 
         setNodes([...nodes, newNode]);
+
+        return newNode;
     }
 
 
@@ -131,6 +133,21 @@ export default function useDialobild() {
 
     }
 
+    function createNewNode({node, targetLocation}) {
+
+        function callback() {
+            // node.content += `(${targetLocation.x}, ${targetLocation.y})`;
+
+            const newNode = createClearNode()
+
+            moveNodeToCell()
+
+        }
+
+        return callback
+
+    }
+
     return {
         nodes,
         setNodes,
@@ -140,6 +157,7 @@ export default function useDialobild() {
         getWidth,
         moveNodeToCell,
         isAllowedCell,
-        getLinks
+        getLinks,
+        createNewNode
     }
 }

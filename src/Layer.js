@@ -6,44 +6,24 @@ export default function Layer({layer, dialobild}) {
         borderRadius: '10px',
         // backgroundColor: 'beige',
 
-        // padding: 20,
-
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        //
-        marginTop: 40,
-        // width: 3333,
 
-        //
         minWidth: "100%",
 
-
-
-        // width: "100px",
-        // width: "100%",
-        //
         minHeight: '70px',
-        height: '1px',
+        height: 'max-content',
         //
-        gap: 10,
+        flexDirection: "row",
 
+        // gap: 10,
     };
 
 
     return (
         <div id={"layer_" + layer.y}  style={style} className="Layer">
-            {/*{props.layer.nodes.map((node, index, arr) => {*/}
-            {/*    const isLast = index === arr.length - 1;*/}
-            {/*    return (*/}
-            {/*        <React.Fragment key={node.id}>*/}
-            {/*            {index === 0 && <Cell dialobild={props.dialobild} />}*/}
-            {/*            <Cell node={node} dialobild={props.dialobild} />*/}
-            {/*            {(!isLast || (isLast && node)) && <Cell dialobild={props.dialobild} />}*/}
-            {/*        </React.Fragment>*/}
-            {/*    );*/}
-            {/*})}*/}
-            {/*{props.layer.nodes.length===0 && <Cell dialobild={props.dialobild} />}*/}
+
             <Cell dialobild={dialobild} cellLocation={{x:0, y:layer.y}}></Cell>
             {Array.from({ length: dialobild.getWidth() }, (_, index) => {
                 index = index+1;
@@ -55,7 +35,6 @@ export default function Layer({layer, dialobild}) {
                     </React.Fragment>
                 )
             })}
-
 
         </div>
     );

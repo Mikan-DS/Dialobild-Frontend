@@ -14,15 +14,20 @@ export default function Cell({dialobild, cellLocation}) {
         data: {cellLocation, node}
     })
 
-    const isOver = over&&over.id===cellId
+    let isOver = over&&over.id===cellId
 
-    const isDisabled = !dialobild.isAllowedCell({activeNode:active, cellLocation:cellLocation})//node || (active && active.data.current.node.location.y === cellLocation.y && Math.abs((active.data.current.node.location.x * 2 - 1) - cellLocation.x) === 1)
+    let isDisabled = !dialobild.isAllowedCell({activeNode:active, cellLocation:cellLocation})//node || (active && active.data.current.node.location.y === cellLocation.y && Math.abs((active.data.current.node.location.x * 2 - 1) - cellLocation.x) === 1)
+
+
+    // isOver = true;
+    // isDisabled = false;
 
     const style = {
-        backgroundColor: isDisabled? undefined: (isOver? 'lightpink': "#F991"),//isOver? 'lightpink' : (active? "#F993": undefined),
-        minHeight: '100%',
+        backgroundColor: isDisabled? undefined: (isOver? 'lightpink': "#F991"),
         minWidth: '30px',
-        display: "flex"
+        display: "flex",
+        alignSelf: "stretch"
+
     };
     return (
         <div ref={setNodeRef} id={cellId} style={style} className="Cell">
