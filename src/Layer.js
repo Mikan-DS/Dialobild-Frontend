@@ -4,7 +4,7 @@ import Cell from './Cell';
 export default function Layer({layer, dialobild}) {
     const style = {
         borderRadius: '10px',
-        backgroundColor: 'beige',
+        // backgroundColor: 'beige',
 
         // padding: 20,
 

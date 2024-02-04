@@ -24,6 +24,9 @@ export default function Node({node, dialobild}) {
     return (
         <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...listeners} {...attributes}>
             {/*<Xarrow start="createClearNode" end={"node_"+props.node.id}></Xarrow>*/}
+            node_{node.id}
+            <p/>
+            {node.location.x}
         </div>
     );
 }

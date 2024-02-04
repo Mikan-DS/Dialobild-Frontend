@@ -14,7 +14,7 @@ export default function useDialobild() {
 
         const node_type = 'ask';
         const content = '???';
-        const rules = {};
+        const rules = {mustHave: [], mustNotHave: [], mustHaveAll: []};
         const statements = [];
         const location = {x, y}
 
@@ -52,54 +52,49 @@ export default function useDialobild() {
         return Math.max(...nodes.map(node => node.location.x));
     }
 
+    function isAllowedCell({activeNode, cellLocation}){
+        const node = getNodeAtLocation((cellLocation.x+1) / 2, cellLocation.y)
+
+
+
+        if (activeNode){
+
+            if (node && node.location === activeNode.location){
+                return false;
+            }
+
+            return !(activeNode.data.current.node.location.y === cellLocation.y && Math.abs((activeNode.data.current.node.location.x * 2 - 1) - cellLocation.x) === 1)
+        }
+
+        return false;
+
+    }
 
     function moveNodeToCell({active, over}){
-        // console.log(over);
 
         const node = active.data.current.node
         const cellLocation = over.data.current.cellLocation
-        node.location.y = cellLocation.y;
 
-        // const next = cellLocation%0===0;
-        let x = Math.floor(cellLocation.x/2)+1;
-        // x = next? x+1:x;
-        // node.location.x = x;
+        if (!over || !isAllowedCell({activeNode: active, cellLocation: cellLocation} ) || (over.data.current.node && node.id === over.data.current.node.id)){
+            return;
+        }
 
-        // console.log(x)
-
-        const layerNodes = nodes.filter(lNode => lNode.location.y === node.location.y)
-        layerNodes.sort((a, b) => a.location.x - b.location.x);
-        // console.log(layerNodes)
-
+        let targetLocation = {x: Math.floor(cellLocation.x/2)+1, y:cellLocation.y}
 
         let lastNode = node
-        for (let i = x; i <= getWidth(); i++){
-
+        for (let i = targetLocation.x; i <= getWidth()+1; i++){
             const currentNode = getNodeAtLocation(i, cellLocation.y)
-
-
-
-            if (currentNode && currentNode.location.x === lastNode.location.x){
-                console.log(currentNode)
-                lastNode.location.x = i;
-                lastNode = currentNode;
-            }
-            else {
-                lastNode.location.x = i;
+            lastNode.location = targetLocation;
+            if (!currentNode){
                 break;
             }
-            // if (layerNodes[i].location.x >= x){
-            //     layerNodes[i].location.x++;
-            // }
+            else {
+                targetLocation = {x: targetLocation.x+1, y: targetLocation.y};
+                lastNode = currentNode;
+            }
         }
-        // console.log(layerNodes)
-
-        // node.location.x =
-
 
         setNodes([...nodes])
-
-
     }
 
 
@@ -110,6 +105,7 @@ export default function useDialobild() {
         getNodeAtLocation,
         getLayers,
         getWidth,
-        moveNodeToCell
+        moveNodeToCell,
+        isAllowedCell
     }
 }

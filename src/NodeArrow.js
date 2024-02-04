@@ -58,7 +58,7 @@ export default function NodeArrow({ startId, endId, updateArrows }) {
 
 
     return (
-        <svg style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
+        <svg style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex:-1}}>
             <line x1={start.x} y1={start.y} x2={end.x} y2={end.y-10} style={{stroke: "black", strokeWidth: 2}}/>
             <NodeArrowHead pointPos={end}/>
         </svg>
