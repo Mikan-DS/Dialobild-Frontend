@@ -38,7 +38,10 @@ export default function DialobildCanvas({dialobild}) {
 
     return (
         <div style={style} className="DialobildCanvas" id="DialobildCanvas">
-            <DndContext onDragMove={updateArrows} onDragEnd={(event) => {updateArrows(); dialobild.moveNodeToCell(event)}} onDragStart={updateArrows}>
+            <DndContext
+                onDragMove={updateArrows}
+                onDragEnd={(event) => {updateArrows(); dialobild.moveNodeToCell(event)}}
+                onDragStart={(event) => {updateArrows(); dialobild.setActiveNode(event.active.data.current.node)}}>
                 <div style={styleContainer} id="DialobildCanvasContainer">
                     <button id="createClearNode" onClick={dialobild.createClearNode}>
                         Создать

@@ -1,6 +1,7 @@
 import './App.css';
 import DialobildCanvas from "./DialobildCanvas";
 import useDialobild from "./useDialobild";
+import NodeSettings from "./NodeSettings";
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
     <div className="App">
 
         <DialobildCanvas dialobild={dialobild}/>
+        <NodeSettings dialobild={dialobild}/>
         {/*<DebugContainer/>*/}
         {/*<CanvasButton></CanvasButton>*/}
 

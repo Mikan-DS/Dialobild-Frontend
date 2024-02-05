@@ -16,38 +16,34 @@ export default function Node({node, dialobild}) {
 
     let nodeContent = node.content;
 
-    // nodeContent += "dhoiasio iojasdoij djioasi jodjioasj djiasjd oaisjd oijas oidjasoij dpasojd opasjd";
-
-    if (nodeContent.length > 120) {
-        nodeContent = nodeContent.substring(0, 117) + '...';
+    if (nodeContent.length > 80) {
+        nodeContent = nodeContent.substring(0, 77) + '...';
     }
 
     let nodeWidth = 100;
 
-    if (node && nodeContent.length > 20){
+    if (node && nodeContent.length > 10){
         nodeWidth = 250;
-        if (nodeContent.length > 70){
+        if (nodeContent.length > 56){
             nodeWidth = 350;
         }
     }
 
+    console.log(dialobild.nodeTypes, node.nodeType)
+
     const style = {
-        backgroundColor: '#93af93',
+        backgroundColor: dialobild.nodeTypes[node.nodeType],
         borderRadius: '10px',
         width: nodeWidth,
         minHeight: '50px',
         maxHeight: 100,
         padding: 10,
-        // height: 100,
 
         transform: CSS.Translate.toString(transform),
     };
 
-    const styleHolder = {
-        display: "inline-flex",
-        // minWidth: 100,
-        // maxWidth: 400,
-        // width: "auto"
+    const holderStyle = {
+        display: "inline-flex"
     }
 
     const buttonStyle = {
@@ -65,7 +61,7 @@ export default function Node({node, dialobild}) {
     const location = node.location
 
     return (
-        <div className="NodeHolder" style={styleHolder}>
+        <div className="NodeHolder" style={holderStyle}>
             <button style={buttonStyle} onClick={dialobild.createNewNode({node, targetLocation:{x: location.x-1, y: location.y}})}>+</button>
             <div style={{display: 'flex', flexDirection: 'column'}}>
                 <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...listeners} {...attributes}>

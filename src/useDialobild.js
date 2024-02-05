@@ -3,6 +3,14 @@ import { useState } from 'react';
 export default function useDialobild() {
     const [nodes, setNodes] = useState([]);
 
+    const [activeNode, setActiveNode] = useState(null)
+
+    const nodeTypes = {
+        ask: "#93af93",
+        answer: "#7888f3"
+    }
+
+
     function createClearNode({x, y}) {
 
         const id = nodes.length === 0 ? 1 : Math.max(...nodes.map(node => node.id)) + 1;
@@ -14,13 +22,13 @@ export default function useDialobild() {
             targetLocation.x++;
         }
 
-        const node_type = 'ask';
+        const nodeType = 'ask';
         const content = '???';
         const rules = {mustHave: [], mustNotHave: [], mustHaveAll: []};
         const statements = [];
         // const location = {x, y}
 
-        const newNode = { id, location:targetLocation, node_type, content, rules, statements };
+        const newNode = { id, location:targetLocation, nodeType, content, rules, statements };
 
         nodes.push(newNode)
 
@@ -125,8 +133,6 @@ export default function useDialobild() {
                 })
             }
             else {
-                console.log(node.rules.mustHave)
-
                 for (let l = 0; l<node.rules.mustHave.length;l++){
 
                     const rule = node.rules.mustHave[l];
@@ -139,7 +145,6 @@ export default function useDialobild() {
 
         }
 
-        // console.log(links)
 
         return links;
 
@@ -148,7 +153,6 @@ export default function useDialobild() {
     function addNewNodeToLocationWrap({node, targetLocation}) {
 
         function callback() {
-            // node.content += `(${targetLocation.x}, ${targetLocation.y})`;
 
             const newNode = createClearNode(targetLocation)
 
@@ -169,6 +173,10 @@ export default function useDialobild() {
 
     }
 
+    function updateNodeProperty(){
+        setNodes([...nodes])
+    }
+
     return {
         nodes,
         setNodes,
@@ -179,6 +187,12 @@ export default function useDialobild() {
         moveNodeToCell,
         isAllowedCell,
         getLinks,
-        createNewNode: addNewNodeToLocationWrap
+        createNewNode: addNewNodeToLocationWrap,
+
+        activeNode,
+        setActiveNode,
+
+        updateNodeProperty,
+        nodeTypes,
     }
 }

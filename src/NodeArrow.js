@@ -28,7 +28,7 @@ export default function NodeArrow({ startId, endId, updateArrows, arrowColor}) {
                 y: startElement.getBoundingClientRect().bottom+scrollTop,
             };
             let newEnd = {
-                x: endElement.getBoundingClientRect().left + startElement.getBoundingClientRect().width,
+                x: endElement.getBoundingClientRect().left + endElement.getBoundingClientRect().width/2,
                 y: endElement.getBoundingClientRect().top+scrollTop,
             };
             if (newStart.x !== start.x || newEnd.x !== end.x || newStart.y !== start.y || newEnd.y !== end.y){
