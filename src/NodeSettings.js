@@ -50,15 +50,16 @@ export default function NodeSettings({dialobild}){
 
                         Тип узла:
                         <select onChange={(e) => {
-                        dialobild.activeNode.nodeType = e.target.value;
-                        dialobild.updateNodeProperty();
-                    }}>
-                        {Object.keys(dialobild.nodeTypes).map((type) => (
-                            <option value={type}>{type}</option>
-                        ))}
+                            dialobild.activeNode.nodeType = e.target.value;
+                            dialobild.updateNodeProperty();
+                        }}>
+                            {Object.keys(dialobild.nodeTypes).map((type) => (
+                                <option value={type} selected={type === dialobild.activeNode.nodeType}>{type}</option>
+                            ))}
                         </select>
 
-                        <button style={{display: "block", backgroundColor:"palevioletred"}}>Удалить узел</button>
+
+                        <button style={{display: "block", backgroundColor: "palevioletred"}}>Удалить узел</button>
 
 
                     </div>
