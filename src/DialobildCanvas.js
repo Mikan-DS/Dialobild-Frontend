@@ -7,7 +7,7 @@ import {DndContext} from "@dnd-kit/core";
 export default function DialobildCanvas({dialobild}) {
     const style = {
         overflowX: 'auto',
-        width: 'auto',
+        width: '100%',
         display: 'flex',
         flexWrap: 'wrap',
 

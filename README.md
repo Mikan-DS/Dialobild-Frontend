@@ -59,4 +59,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
     - [ ] SS (структура для ShortStoryTellingEngine)
     - [ ] SSC (заранее скомпилированный сценарий структура для ShortStoryTellingEngine)
     - [ ] XML
-- [ ] Исправить баг стрелок с прогрузкой вниз
+- [X] Исправить баг стрелок с прогрузкой вниз
+- [ ] Исправить баг с горизонтальной прокруткой (Элементы спрятались за левым краем)
