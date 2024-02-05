@@ -8,14 +8,14 @@ export default function NodeSettings({dialobild}){
     };
 
     const buttonStyles = {
-        position: 'absolute',
+        position: 'fixed',
         top: '50%',
         right: isOpen ? '33%' : '0',
         transform: 'translateY(-50%) rotate(-90deg)',
     };
 
     const containerStyles = {
-        position: 'absolute',
+        position: 'fixed',
         right: 0,
         top: '10%',
         width: '33%',
@@ -66,8 +66,42 @@ export default function NodeSettings({dialobild}){
                         </button>
 
                         <h4>Связи и влияние других узлов:</h4>
-                        <hr/>
 
+                        {dialobild.selectionMode &&
+                            <div>
+                                <hr/>
+                                Изменение связей ({dialobild.selectionMode}):
+                                <button onClick={() => dialobild.setSelectionMode(null)}>
+                                    Готово
+                                </button>
+                            </div>
+                        }
+
+                        <hr/>
+                        Активно если одно из:
+
+                        {dialobild.selectionMode !== "mustHave" &&
+                            <button onClick={() => dialobild.setSelectionMode("mustHave")}>
+                                Изменить
+                            </button>
+                        }
+
+
+                        <hr/>
+                        Активно если все из:
+                        {dialobild.selectionMode !== "mustHaveAll" &&
+                            <button onClick={() => dialobild.setSelectionMode("mustHaveAll")}>
+                                Изменить
+                            </button>
+                        }
+
+                        <hr/>
+                        Неактивно если хотя бы одно из:
+                        {dialobild.selectionMode !== "mustNotHave" &&
+                            <button onClick={() => dialobild.setSelectionMode("mustNotHave")}>
+                                Изменить
+                            </button>
+                        }
                     </div>
                 </div>}
         </div>

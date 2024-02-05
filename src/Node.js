@@ -38,6 +38,7 @@ export default function Node({node, dialobild}) {
         minHeight: '50px',
         maxHeight: 100,
         padding: 10,
+        border: "0.2em "+dialobild.nodeSelectionOutline(node),
 
         transform: CSS.Translate.toString(transform),
     };
@@ -50,7 +51,7 @@ export default function Node({node, dialobild}) {
         width: 30,
         height: 30,
         padding: 5,
-        visibility: active? "hidden": "visible",
+        visibility: active || dialobild.selectionMode? "hidden": "visible",
         alignSelf: "center",
 
         border: "none",
@@ -60,11 +61,13 @@ export default function Node({node, dialobild}) {
 
     const location = node.location
 
+    const attribs = dialobild.selectionMode? {onClick: () => dialobild.toggleNodeSelection(node)}:{...listeners, ...attributes}
+
     return (
         <div className="NodeHolder" style={holderStyle}>
             <button style={buttonStyle} onClick={dialobild.createNewNode({node, targetLocation:{x: location.x-1, y: location.y}})}>+</button>
             <div style={{display: 'flex', flexDirection: 'column'}}>
-                <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...listeners} {...attributes}>
+                <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...attribs}>
                     {nodeContent}
                 </div>
                 <button style={buttonStyle} onClick={dialobild.createNewNode({node, targetLocation:{x: location.x, y: location.y+1}})}>+</button>

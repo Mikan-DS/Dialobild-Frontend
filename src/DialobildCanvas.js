@@ -6,7 +6,7 @@ import {DndContext} from "@dnd-kit/core";
 
 export default function DialobildCanvas({dialobild}) {
     const style = {
-        overflowX: 'auto',
+        // overflowX: 'auto',
         width: '100%',
         // height: '100%',
         display: 'flex',
@@ -32,12 +32,12 @@ export default function DialobildCanvas({dialobild}) {
     };
 
     useEffect(() => {
-        console.log("TEST")
+        // console.log("TEST")
         console.log(document.getElementById("DialobildCanvas").getBoundingClientRect().width, document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width)
 
         if (document.getElementById("DialobildCanvas").getBoundingClientRect().width > document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width){
             document.getElementById("DialobildCanvas").style.justifyContent = 'center';
-            console.log("SMALL")
+            // console.log("SMALL")
         }
         else {
             document.getElementById("DialobildCanvas").style.justifyContent = "start";

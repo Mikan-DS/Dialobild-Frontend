@@ -4,10 +4,19 @@ export default function useDialobild() {
     const [nodes, setNodes] = useState([]);
 
     const [activeNode, setActiveNode] = useState(null)
+    const [selectionMode, setSelectionMode] = useState(null)
 
     const nodeTypes = {
         ask: "#93af93",
         answer: "#7888f3"
+    }
+
+    const selectionModes = {
+        null: "solid #0000",
+        "mustHave": "solid #0F0F",
+        "mustHaveAll": "solid #00FF",
+        "mustNotHave": "solid #F00F",
+        "self": "dash #F0FF",
     }
 
 
@@ -206,9 +215,68 @@ export default function useDialobild() {
         removeFromList(node, nodes)
 
         setActiveNode(null)
+        setSelectionMode(null)
 
         updateNodeProperty()
 
+    }
+
+    function toggleNodeSelection(node, backward=false){
+
+        if (!activeNode || !selectionMode){
+            setSelectionMode(null);
+            return;
+        }
+
+        if (node.id === activeNode.id){
+            return;
+        }
+
+        if (backward){
+            if(node.rules[selectionMode].includes(activeNode.id)){
+                removeFromList(activeNode.id, node.rules[selectionMode])
+            }
+            else {
+                node.rules[selectionMode].push(activeNode.id)
+            }
+        }
+        else {
+            if(activeNode.rules[selectionMode].includes(node.id)){
+                removeFromList(node.id, activeNode.rules[selectionMode])
+            }
+            else {
+                removeFromList(node.id, activeNode.rules["mustHave"])
+                removeFromList(node.id, activeNode.rules["mustHaveAll"])
+                removeFromList(node.id, activeNode.rules["mustNotHave"])
+
+                activeNode.rules[selectionMode].push(node.id)
+            }
+        }
+
+        updateNodeProperty()
+    }
+
+    function nodeSelectionOutline(node){
+
+        if (!activeNode || !selectionMode){
+            return "solid #0000"
+        }
+
+        if (activeNode.id === node.id){
+            return "dashed #FF0F"
+        }
+
+        if (activeNode.rules["mustHave"].includes(node.id)){
+            return selectionModes["mustHave"]
+        }
+        else if (activeNode.rules["mustHaveAll"].includes(node.id)){
+            return selectionModes["mustHaveAll"]
+        }
+        else if (activeNode.rules["mustNotHave"].includes(node.id)){
+            return selectionModes["mustNotHave"]
+        }
+
+        return "solid #0000"
     }
 
     return {
@@ -229,6 +297,13 @@ export default function useDialobild() {
         updateNodeProperty,
         nodeTypes,
 
-        deleteNode
+        deleteNode,
+
+        selectionMode,
+        setSelectionMode,
+
+        toggleNodeSelection,
+        selectionModes,
+        nodeSelectionOutline
     }
 }
