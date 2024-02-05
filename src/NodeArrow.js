@@ -9,7 +9,10 @@ function NodeArrowHead({pointPos, arrowColor}) {
 }
 
 
-export default function NodeArrow({ startId, endId, updateArrows, arrowColor}) { //TODO Может быть хранить тут сразу все стрелки?
+export default function NodeArrow({ startId, endId, updateArrows, arrowColor, arrowStyle}) { //TODO Может быть хранить тут сразу все стрелки?
+
+    arrowStyle = arrowStyle? arrowStyle: "solid"
+
     const [start, setStart] = useState({x: 0, y: 0});
     const [end, setEnd] = useState({x: 0, y: 0});
 
@@ -66,7 +69,7 @@ export default function NodeArrow({ startId, endId, updateArrows, arrowColor}) {
 
     return ( // Решить проблему с расширением экрана
         <svg style={{position: 'absolute', top: scrollTop, left: scrollLeft, width: '100%', height: '100%', pointerEvents: 'none', zIndex:-1}}>
-            <line x1={start.x} y1={start.y} x2={end.x} y2={end.y-10} style={{stroke: arrowColor, strokeWidth: 2}}/>
+            <line x1={start.x} y1={start.y} x2={end.x} y2={end.y-10} style={{stroke: arrowColor, strokeWidth: 2, strokeDasharray: arrowStyle}}/>
             <NodeArrowHead pointPos={end} arrowColor={arrowColor}/>
         </svg>
     );

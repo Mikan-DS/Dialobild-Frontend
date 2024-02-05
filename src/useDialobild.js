@@ -39,9 +39,9 @@ export default function useDialobild() {
 
         const newNode = { id, location:targetLocation, nodeType, content, rules, statements };
 
-        nodes.push(newNode)
+        nodes.push(newNode);
 
-        setNodes([...nodes]);
+        updateNodeProperty();
 
         return newNode;
     }
@@ -105,7 +105,7 @@ export default function useDialobild() {
             }
         }
 
-        setNodes([...nodes])
+        updateNodeProperty();
     }
 
     function moveNodeToCell({active, over}){
@@ -129,27 +129,42 @@ export default function useDialobild() {
 
     function getLinks() {
 
-        const links = {mustHave: []}
+        const links = {mustHave: [], mustHaveAll: [], mustNotHave: []}
 
         for (let i = 0; i<nodes.length; i++){
             let node = nodes[i]
 
 
-            if (node.rules.mustHave.length === 0){
+            if (!(node.rules.mustHave.length || node.rules.mustHaveAll.length)){
                 links.mustHave.push({
                     startId: "createClearNode",
                     endId: "node_"+node.id
                 })
             }
-            else {
-                for (let l = 0; l<node.rules.mustHave.length;l++){
+            for (let l = 0; l<node.rules.mustHave.length;l++){
 
-                    const rule = node.rules.mustHave[l];
-                    links.mustHave.push({
-                        startId: "node_"+rule,
-                        endId: "node_"+node.id
-                    })
-                }
+                const rule = node.rules.mustHave[l];
+                links.mustHave.push({
+                    startId: "node_"+rule,
+                    endId: "node_"+node.id
+                })
+            }
+            for (let l = 0; l<node.rules.mustHaveAll.length;l++){
+
+                const rule = node.rules.mustHaveAll[l];
+                links.mustHaveAll.push({
+                    startId: "node_"+rule,
+                    endId: "node_"+node.id
+                })
+            }
+
+            for (let l = 0; l<node.rules.mustNotHave.length;l++){
+
+                const rule = node.rules.mustNotHave[l];
+                links.mustNotHave.push({
+                    startId: "node_"+rule,
+                    endId: "node_"+node.id
+                })
             }
 
         }

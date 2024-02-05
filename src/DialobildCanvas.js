@@ -71,6 +71,12 @@ export default function DialobildCanvas({dialobild}) {
                 {links.mustHave.map((rule, index) => (
                     <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>
                 ))}
+                {links.mustHaveAll.map((rule, index) => (
+                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>
+                ))}
+                {links.mustNotHave.map((rule, index) => (
+                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="red"/>
+                ))}
             </DndContext>
         </div>
     );
