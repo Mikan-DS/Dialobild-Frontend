@@ -72,7 +72,7 @@ export default function DialobildCanvas({dialobild}) {
                     <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>
                 ))}
                 {links.mustHaveAll.map((rule, index) => (
-                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>
+                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green" arrowStyle="4, 5"/>
                 ))}
                 {links.mustNotHave.map((rule, index) => (
                     <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="red"/>
