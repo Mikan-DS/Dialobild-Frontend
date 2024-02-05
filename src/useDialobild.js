@@ -3,6 +3,23 @@ import { useState } from 'react';
 export default function useDialobild() {
     const [nodes, setNodes] = useState([]);
 
+    const [activeNode, setActiveNode] = useState(null)
+    const [selectionMode, setSelectionMode] = useState(null)
+
+    const nodeTypes = {
+        ask: "#93af93",
+        answer: "#7888f3"
+    }
+
+    const selectionModes = {
+        null: "solid #0000",
+        "mustHave": "solid #0F0F",
+        "mustHaveAll": "solid #00FF",
+        "mustNotHave": "solid #F00F",
+        "self": "dash #F0FF",
+    }
+
+
     function createClearNode({x, y}) {
 
         const id = nodes.length === 0 ? 1 : Math.max(...nodes.map(node => node.id)) + 1;
@@ -14,17 +31,17 @@ export default function useDialobild() {
             targetLocation.x++;
         }
 
-        const node_type = 'ask';
+        const nodeType = 'ask';
         const content = '???';
         const rules = {mustHave: [], mustNotHave: [], mustHaveAll: []};
         const statements = [];
         // const location = {x, y}
 
-        const newNode = { id, location:targetLocation, node_type, content, rules, statements };
+        const newNode = { id, location:targetLocation, nodeType, content, rules, statements };
 
-        nodes.push(newNode)
+        nodes.push(newNode);
 
-        setNodes([...nodes]);
+        updateNodeProperty();
 
         return newNode;
     }
@@ -88,7 +105,7 @@ export default function useDialobild() {
             }
         }
 
-        setNodes([...nodes])
+        updateNodeProperty();
     }
 
     function moveNodeToCell({active, over}){
@@ -112,34 +129,46 @@ export default function useDialobild() {
 
     function getLinks() {
 
-        const links = {mustHave: []}
+        const links = {mustHave: [], mustHaveAll: [], mustNotHave: []}
 
         for (let i = 0; i<nodes.length; i++){
             let node = nodes[i]
 
 
-            if (node.rules.mustHave.length === 0){
+            if (!(node.rules.mustHave.length || node.rules.mustHaveAll.length)){
                 links.mustHave.push({
                     startId: "createClearNode",
                     endId: "node_"+node.id
                 })
             }
-            else {
-                console.log(node.rules.mustHave)
+            for (let l = 0; l<node.rules.mustHave.length;l++){
 
-                for (let l = 0; l<node.rules.mustHave.length;l++){
+                const rule = node.rules.mustHave[l];
+                links.mustHave.push({
+                    startId: "node_"+rule,
+                    endId: "node_"+node.id
+                })
+            }
+            for (let l = 0; l<node.rules.mustHaveAll.length;l++){
 
-                    const rule = node.rules.mustHave[l];
-                    links.mustHave.push({
-                        startId: "node_"+rule,
-                        endId: "node_"+node.id
-                    })
-                }
+                const rule = node.rules.mustHaveAll[l];
+                links.mustHaveAll.push({
+                    startId: "node_"+rule,
+                    endId: "node_"+node.id
+                })
+            }
+
+            for (let l = 0; l<node.rules.mustNotHave.length;l++){
+
+                const rule = node.rules.mustNotHave[l];
+                links.mustNotHave.push({
+                    startId: "node_"+rule,
+                    endId: "node_"+node.id
+                })
             }
 
         }
 
-        // console.log(links)
 
         return links;
 
@@ -148,7 +177,6 @@ export default function useDialobild() {
     function addNewNodeToLocationWrap({node, targetLocation}) {
 
         function callback() {
-            // node.content += `(${targetLocation.x}, ${targetLocation.y})`;
 
             const newNode = createClearNode(targetLocation)
 
@@ -169,6 +197,103 @@ export default function useDialobild() {
 
     }
 
+    function removeFromList(element, list){
+        let index = list.indexOf(element);
+        if (index > -1) {
+            list.splice(index, 1);
+        }
+
+    }
+
+    function updateNodeProperty(){
+        setNodes([...nodes])
+    }
+
+    function deleteNode(node){
+        const mustHave = node.rules.mustHave;
+
+        nodes.map((element) => {
+            if (element.rules.mustHave.includes(node.id)){
+                removeFromList(node.id, element.rules.mustHave);
+                element.rules.mustHave = [...element.rules.mustHave, ...mustHave]
+            }
+        })
+
+        nodes.map((element) => {
+            if (element.rules.mustHaveAll.includes(node.id) || element.rules.mustNotHave.includes(node.id)){
+                removeFromList(node.id, element.rules.mustHave);
+                removeFromList(node.id, element.rules.mustNotHave);
+                element.rules.mustHave = [...element.rules.mustHave, ...mustHave]
+            }
+        })
+
+        removeFromList(node, nodes)
+
+        setActiveNode(null)
+        setSelectionMode(null)
+
+        updateNodeProperty()
+
+    }
+
+    function toggleNodeSelection(node, backward=false){
+
+        if (!activeNode || !selectionMode){
+            setSelectionMode(null);
+            return;
+        }
+
+        if (node.id === activeNode.id){
+            return;
+        }
+
+        if (backward){
+            if(node.rules[selectionMode].includes(activeNode.id)){
+                removeFromList(activeNode.id, node.rules[selectionMode])
+            }
+            else {
+                node.rules[selectionMode].push(activeNode.id)
+            }
+        }
+        else {
+            if(activeNode.rules[selectionMode].includes(node.id)){
+                removeFromList(node.id, activeNode.rules[selectionMode])
+            }
+            else {
+                removeFromList(node.id, activeNode.rules["mustHave"])
+                removeFromList(node.id, activeNode.rules["mustHaveAll"])
+                removeFromList(node.id, activeNode.rules["mustNotHave"])
+
+                activeNode.rules[selectionMode].push(node.id)
+            }
+        }
+
+        updateNodeProperty()
+    }
+
+    function nodeSelectionOutline(node){
+
+        if (!activeNode || !selectionMode){
+            return "solid #0000"
+        }
+
+        if (activeNode.id === node.id){
+            return "dashed #FF0F"
+        }
+
+        if (activeNode.rules["mustHave"].includes(node.id)){
+            return selectionModes["mustHave"]
+        }
+        else if (activeNode.rules["mustHaveAll"].includes(node.id)){
+            return selectionModes["mustHaveAll"]
+        }
+        else if (activeNode.rules["mustNotHave"].includes(node.id)){
+            return selectionModes["mustNotHave"]
+        }
+
+        return "solid #0000"
+    }
+
     return {
         nodes,
         setNodes,
@@ -179,6 +304,21 @@ export default function useDialobild() {
         moveNodeToCell,
         isAllowedCell,
         getLinks,
-        createNewNode: addNewNodeToLocationWrap
+        createNewNode: addNewNodeToLocationWrap,
+
+        activeNode,
+        setActiveNode,
+
+        updateNodeProperty,
+        nodeTypes,
+
+        deleteNode,
+
+        selectionMode,
+        setSelectionMode,
+
+        toggleNodeSelection,
+        selectionModes,
+        nodeSelectionOutline
     }
 }
