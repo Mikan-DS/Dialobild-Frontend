@@ -173,8 +173,42 @@ export default function useDialobild() {
 
     }
 
+    function removeFromList(element, list){
+        let index = list.indexOf(element);
+        if (index > -1) {
+            list.splice(index, 1);
+        }
+
+    }
+
     function updateNodeProperty(){
         setNodes([...nodes])
+    }
+
+    function deleteNode(node){
+        const mustHave = node.rules.mustHave;
+
+        nodes.map((element) => {
+            if (element.rules.mustHave.includes(node.id)){
+                removeFromList(node.id, element.rules.mustHave);
+                element.rules.mustHave = [...element.rules.mustHave, ...mustHave]
+            }
+        })
+
+        nodes.map((element) => {
+            if (element.rules.mustHaveAll.includes(node.id) || element.rules.mustNotHave.includes(node.id)){
+                removeFromList(node.id, element.rules.mustHave);
+                removeFromList(node.id, element.rules.mustNotHave);
+                element.rules.mustHave = [...element.rules.mustHave, ...mustHave]
+            }
+        })
+
+        removeFromList(node, nodes)
+
+        setActiveNode(null)
+
+        updateNodeProperty()
+
     }
 
     return {
@@ -194,5 +228,7 @@ export default function useDialobild() {
 
         updateNodeProperty,
         nodeTypes,
+
+        deleteNode
     }
 }

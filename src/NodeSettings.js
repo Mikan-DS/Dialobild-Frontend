@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export default function NodeSettings({dialobild}){
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     const toggleOpen = () => {
         setIsOpen(!isOpen);
@@ -38,7 +38,7 @@ export default function NodeSettings({dialobild}){
                     onClick={toggleOpen}> {isOpen ? 'Закрыть' : 'Открыть'} {dialobild.activeNode && "узел " + dialobild.activeNode.id}
                 </button>}
 
-            {isOpen &&
+            {dialobild.activeNode && isOpen &&
                 <div style={containerStyles}>
                     <div style={{textAlign: "left"}}>
                         <h3 style={{textAlign: "center"}}>Характеристики узла №{dialobild.activeNode.id}</h3>
@@ -59,7 +59,9 @@ export default function NodeSettings({dialobild}){
                         </select>
 
 
-                        <button style={{display: "block", backgroundColor: "palevioletred"}}>Удалить узел</button>
+                        <button
+                            style={{display: "block", backgroundColor: "palevioletred"}}
+                            onClick={() => dialobild.deleteNode(dialobild.activeNode)}>Удалить узел</button>
 
 
                     </div>
