@@ -23,7 +23,8 @@ export default function NodeSettings({dialobild}){
         padding: isOpen ? '1em' : 'none',
         backgroundColor: 'lightgray',
         border: '1px solid black',
-        transition: 'width 0.3s ease'
+        transition: 'width 0.3s ease',
+
     };
 
     const inputStyle = {
@@ -61,8 +62,11 @@ export default function NodeSettings({dialobild}){
 
                         <button
                             style={{display: "block", backgroundColor: "palevioletred"}}
-                            onClick={() => dialobild.deleteNode(dialobild.activeNode)}>Удалить узел</button>
+                            onClick={() => dialobild.deleteNode(dialobild.activeNode)}>Удалить узел
+                        </button>
 
+                        <h4>Связи и влияние других узлов:</h4>
+                        <hr/>
 
                     </div>
                 </div>}

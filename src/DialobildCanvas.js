@@ -8,11 +8,12 @@ export default function DialobildCanvas({dialobild}) {
     const style = {
         overflowX: 'auto',
         width: '100%',
+        // height: '100%',
         display: 'flex',
         flexWrap: 'wrap',
 
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
     };
 
 
@@ -23,8 +24,25 @@ export default function DialobildCanvas({dialobild}) {
         justifyContent: 'center',
         alignItems: 'center',
 
+        // paddingLeft: "50%",
+
+        // minWidth: "100%",
+
         gap: 70,
     };
+
+    useEffect(() => {
+        console.log("TEST")
+        console.log(document.getElementById("DialobildCanvas").getBoundingClientRect().width, document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width)
+
+        if (document.getElementById("DialobildCanvas").getBoundingClientRect().width > document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width){
+            document.getElementById("DialobildCanvas").style.justifyContent = 'center';
+            console.log("SMALL")
+        }
+        else {
+            document.getElementById("DialobildCanvas").style.justifyContent = "start";
+        }
+    }, [document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width])
 
     const links = dialobild.getLinks()
 

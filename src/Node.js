@@ -29,7 +29,7 @@ export default function Node({node, dialobild}) {
         }
     }
 
-    console.log(dialobild.nodeTypes, node.nodeType)
+    // console.log(dialobild.nodeTypes, node.nodeType)
 
     const style = {
         backgroundColor: dialobild.nodeTypes[node.nodeType],
