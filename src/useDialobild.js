@@ -34,7 +34,7 @@ export default function useDialobild() {
         const nodeType = 'ask';
         const content = '???';
         const rules = {mustHave: [], mustNotHave: [], mustHaveAll: []};
-        const statements = [];
+        const statements = []; //TODO
         // const location = {x, y}
 
         const newNode = { id, location:targetLocation, nodeType, content, rules, statements };
