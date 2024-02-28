@@ -1,6 +1,30 @@
-import { useState } from 'react';
-
+import {useEffect, useState} from 'react';
+import useOAuth from "./useOAuth";
 export default function useDialobild() {
+
+    const [apiError, setApiError] = useState(null);
+
+    const oAuth = useOAuth()
+
+    useEffect( () => {
+
+        async function fetchData(){
+            const response = await oAuth.fetchAPI("http://localhost:8000/api/projects/");
+
+            if (response === false){
+                console.log("Авторизации нет")
+            }
+            else {
+                console.log(response)
+            }
+
+
+        }
+        fetchData();
+
+
+    }, [])
+
     const [nodes, setNodes] = useState([]);
 
     const [activeNode, setActiveNode] = useState(null)
@@ -319,6 +343,8 @@ export default function useDialobild() {
 
         toggleNodeSelection,
         selectionModes,
-        nodeSelectionOutline
+        nodeSelectionOutline,
+
+        apiError
     }
 }

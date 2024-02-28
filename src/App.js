@@ -5,6 +5,8 @@ import NodeSettings from "./NodeSettings";
 
 function App() {
 
+    console.log("RERENDER")
+
     const dialobild = useDialobild()
 
     document.dd = dialobild;
@@ -12,10 +14,20 @@ function App() {
     return (
     <div className="App">
 
-        <DialobildCanvas dialobild={dialobild}/>
-        <NodeSettings dialobild={dialobild}/>
+        {dialobild.apiError ? (
+            <p>{dialobild.apiError}</p>
+        ) : (
+            <>
+                <DialobildCanvas dialobild={dialobild}/>
+                <NodeSettings dialobild={dialobild}/>
+            </>
+        )}
+
+
         {/*<DebugContainer/>*/}
         {/*<CanvasButton></CanvasButton>*/}
+
+        <a href="/?startagain">Обновить</a>
 
     </div>
     );
