@@ -11,6 +11,8 @@ export default function useDialobild() {
 
     const oAuth = useOAuth()
 
+    const [projects, setProjects] = useState({})
+
     useEffect( () => {
 
         async function fetchData(){
@@ -18,8 +20,10 @@ export default function useDialobild() {
             if (!fetchState){
                 fetchState = true;
 
+                let response = null;
+
                 if (!oAuth.oAuthState){
-                    const response = await oAuth.fetchAPI(`${variables.backend_url}/api/projects/`);
+                    response = await oAuth.fetchAPI(`${variables.backend_url}/api/projects/`);
 
                     if (response === false){
                         console.log("Авторизации нет")
@@ -32,7 +36,24 @@ export default function useDialobild() {
 
                 if (oAuth.oAuthState){
                     await oAuth.authorize()
+                    if (!oAuth.oAuthState){
+                        response = await oAuth.fetchAPI(`${variables.backend_url}/api/projects/`);
+                        console.log(response)
+                    }
                 }
+
+                if (response){
+                    setProjects(response)
+
+                    const project = await oAuth.fetchAPI(`${variables.backend_url}/api/project/id/6/`)
+
+                    nodes.length = 0
+                    nodes.push(...project.nodes)
+
+                    updateNodeProperty()
+                }
+
+
             }
 
         }

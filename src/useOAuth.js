@@ -32,7 +32,7 @@ export default function useOAuth(){
         const apiHeaders = new Headers();
 
         if (accessToken){
-            apiHeaders.append("Authorization", accessToken);
+            apiHeaders.append("Authorization", "Bearer "+accessToken);
         }
 
         const formdata = new FormData();
@@ -131,6 +131,7 @@ export default function useOAuth(){
                 oAuthState = null;
                 document.cookie = `access_token=${access_token}; expires=${expires_in}; path=/`;
                 document.cookie = `refresh_token=${refresh_token}; expires=${expires_in}; path=/`;
+
 
 
             }
