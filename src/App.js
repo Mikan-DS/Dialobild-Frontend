@@ -5,8 +5,6 @@ import NodeSettings from "./NodeSettings";
 
 function App() {
 
-    console.log("RERENDER")
-
     const dialobild = useDialobild()
 
     document.dd = dialobild;

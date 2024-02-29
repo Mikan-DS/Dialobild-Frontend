@@ -33,7 +33,7 @@ export default function DialobildCanvas({dialobild}) {
 
     useEffect(() => {
         // console.log("TEST")
-        console.log(document.getElementById("DialobildCanvas").getBoundingClientRect().width, document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width)
+        // console.log(document.getElementById("DialobildCanvas").getBoundingClientRect().width, document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width)
 
         if (document.getElementById("DialobildCanvas").getBoundingClientRect().width > document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width){
             document.getElementById("DialobildCanvas").style.justifyContent = 'center';

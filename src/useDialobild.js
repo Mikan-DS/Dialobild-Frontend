@@ -1,5 +1,10 @@
 import {useEffect, useState} from 'react';
 import useOAuth from "./useOAuth";
+import variables from "./variables.json"
+
+let fetchState = false;
+
+
 export default function useDialobild() {
 
     const [apiError, setApiError] = useState(null);
@@ -9,15 +14,26 @@ export default function useDialobild() {
     useEffect( () => {
 
         async function fetchData(){
-            const response = await oAuth.fetchAPI("http://localhost:8000/api/projects/");
 
-            if (response === false){
-                console.log("Авторизации нет")
-            }
-            else {
-                console.log(response)
-            }
+            if (!fetchState){
+                fetchState = true;
 
+                if (!oAuth.oAuthState){
+                    const response = await oAuth.fetchAPI(`${variables.backend_url}/api/projects/`);
+
+                    if (response === false){
+                        console.log("Авторизации нет")
+                        oAuth.beginAuth()
+                    }
+                    else {
+                        console.log(response)
+                    }
+                }
+
+                if (oAuth.oAuthState){
+                    await oAuth.authorize()
+                }
+            }
 
         }
         fetchData();
