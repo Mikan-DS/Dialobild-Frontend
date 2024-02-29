@@ -45,6 +45,12 @@ export default function useDialobild() {
                 if (response){
                     setProjects(response)
 
+                    setActiveProject({
+                        id:6,
+                        name:"Test project"
+                    })
+
+
                     const project = await oAuth.fetchAPI(`${variables.backend_url}/api/project/id/6/`)
 
                     nodes.length = 0
@@ -55,10 +61,7 @@ export default function useDialobild() {
                         return acc;
                     }, {}))
 
-                    setActiveProject({
-                        id:project.id,
-                        name:project.name
-                    })
+
 
                     updateNodeProperty()
                 }
@@ -112,6 +115,8 @@ export default function useDialobild() {
         const newNode = { id, location:targetLocation, nodeType, content, rules, statements };
 
         nodes.push(newNode);
+
+        // setNodes([...nodes]);
 
         updateNodeProperty();
 
@@ -279,6 +284,14 @@ export default function useDialobild() {
 
     function updateNodeProperty(){
         setNodes([...nodes])
+
+        if (activeProject !== null){ //TODO чтобы уменьшить нагрузку - в будущем надо слать сами изменения
+            console.log(oAuth.fetchAPI(variables.backend_url+"/api/project/save/", {
+                project_id: activeProject.id,
+                nodes: nodes
+            }))
+        }
+
     }
 
     function deleteNode(node){
