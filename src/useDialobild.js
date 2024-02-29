@@ -50,6 +50,16 @@ export default function useDialobild() {
                     nodes.length = 0
                     nodes.push(...project.nodes)
 
+                    setNodeTypes(project.nodeTypes.reduce((acc, obj) => { //TODO нужно переделать так, чтобы обозначения можно было читать везде
+                        acc[obj.code] = obj.color;
+                        return acc;
+                    }, {}))
+
+                    setActiveProject({
+                        id:project.id,
+                        name:project.name
+                    })
+
                     updateNodeProperty()
                 }
 
@@ -63,14 +73,15 @@ export default function useDialobild() {
     }, [])
 
     const [nodes, setNodes] = useState([]);
+    const [activeProject, setActiveProject] = useState(null);
 
     const [activeNode, setActiveNode] = useState(null)
     const [selectionMode, setSelectionMode] = useState(null)
-
-    const nodeTypes = {
+    const [nodeTypes, setNodeTypes] = useState({
         ask: "#93af93",
         answer: "#7888f3"
-    }
+    })
+
 
     const selectionModes = {
         null: "solid #0000",
