@@ -72,7 +72,7 @@ export default function useOAuth(){
 
     function generateCodeChallenge(){ //TODO стоит ли после получения токена подчищать?
         sessionStorage.setItem(
-            'DiabildAuthCodeVerifier',
+            'DiabildAuthCodeVerifier', //TODO: необходимо написать генератор
             'VGMB4QY13C24L83RFK0G9U7G49VKIVLM3ELIVRTAGDAGTV6A52C191S93I105W2AE1EITCET4IJ7ZBYVQHDMW38CG9V0MLCTNPUIJFFSDKE4DGFGVNOVW1TVWO76PX');
         sessionStorage.setItem('DiabildAuthCodeChallenge', '4SsOYQmOG5m2BXt-oiqAWVa_lAWFpQsWsvBOiD09C10');
 

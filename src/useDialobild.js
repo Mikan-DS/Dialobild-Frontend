@@ -283,14 +283,34 @@ export default function useDialobild() {
     }
 
     function updateNodeProperty(){
-        setNodes([...nodes])
 
         if (activeProject !== null){ //TODO чтобы уменьшить нагрузку - в будущем надо слать сами изменения
-            console.log(oAuth.fetchAPI(variables.backend_url+"/api/project/save/", {
+            const response = oAuth.fetchAPI(variables.backend_url+"/api/project/save/", {
                 project_id: activeProject.id,
                 nodes: nodes
-            }))
+            })
+
+            if (response.error === 0){
+
+                let newNodesIds = Object.keys(response.new_nodes_ids).sort((a, b) => b - a);
+
+                for (let i = 0; i < newNodesIds.length; i++) {
+                    let oldId = newNodesIds[i];
+                    let newId = response.new_nodes_ids[oldId];
+                    for (let j = nodes.length-1; j >= 0; j--) {
+                        if (nodes[j].id === oldId) {
+                            nodes[j].id = newId;
+                            break;
+                        }
+                    }
+                }
+
+
+            }
         }
+
+        setNodes([...nodes])
+
 
     }
 
