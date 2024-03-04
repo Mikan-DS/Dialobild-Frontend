@@ -71,11 +71,8 @@ export default function useOAuth(){
 
     function beginAuth(){
         sessionStorage.setItem('DiabildAuthState', 'noauth');
-        // generateCodeChallenge().then(r => null)
-
         console.log(getOAuthState())
     }
-
 
     async function generateCodeChallenge() {
         const randomLength = Math.floor(Math.random() * (128 - 43 + 1)) + 43;
@@ -83,22 +80,10 @@ export default function useOAuth(){
 
         let encoder = new TextEncoder();
 
-// Преобразование code_verifier в base64
-        let base64CodeVerifier = btoa(codeVerifier);
+        let data = encoder.encode(codeVerifier);
+        let hash= await window.crypto.subtle.digest('SHA-256', data)
+        let base64Hash = btoa(String.fromCharCode.apply(null, new Uint8Array(hash)));
 
-// Преобразование base64 строки в байты
-        let base64CodeVerifierData = encoder.encode(base64CodeVerifier);
-
-// Хеширование
-        let hash= await window.crypto.subtle.digest('SHA-256', base64CodeVerifierData)//.then(r => {
-        //     hash = r;
-        // });
-
-        let buffer = new Uint8Array(hash);
-        let base64Hash = btoa(String.fromCharCode.apply(null, buffer));
-
-        // It is not possible in JavaScript to generate a urlsafe base64 without a third-party library
-        // So we need to manually replace '+' with '-', '/' with '_' and remove trailing '='
         let codeChallenge = base64Hash.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
         window.sessionStorage.setItem('DiabildAuthCodeVerifier', codeVerifier);
