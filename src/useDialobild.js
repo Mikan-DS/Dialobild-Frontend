@@ -20,9 +20,10 @@ export default function useDialobild() {
             if (!fetchState){
                 fetchState = true;
 
+
                 let response = null;
 
-                if (!oAuth.oAuthState){
+                if (!oAuth.getOAuthState()){
                     response = await oAuth.fetchAPI(`${variables.backend_url}/api/projects/`);
 
                     if (response === false){
@@ -33,10 +34,11 @@ export default function useDialobild() {
                         console.log(response)
                     }
                 }
+                console.log(oAuth.getOAuthState())
 
-                if (oAuth.oAuthState){
+                if (oAuth.getOAuthState()){
                     await oAuth.authorize()
-                    if (!oAuth.oAuthState){
+                    if (!oAuth.getOAuthState()){
                         response = await oAuth.fetchAPI(`${variables.backend_url}/api/projects/`);
                         console.log(response)
                     }

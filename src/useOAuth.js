@@ -18,7 +18,11 @@ export default function useOAuth(){
         console.log("Куки с access_token отсутствуют.");
     }
 
-    let oAuthState = sessionStorage.getItem("DiabildAuthState")
+    // let oAuthState = sessionStorage.getItem("DiabildAuthState")
+
+    function getOAuthState() {
+        return sessionStorage.getItem("DiabildAuthState")
+    }
 
     //TODO нужно время дебага авторизации
     const urlParams = new URLSearchParams(window.location.search);
@@ -66,21 +70,38 @@ export default function useOAuth(){
     }
 
     function beginAuth(){
-        sessionStorage.setItem('DiabildAuthState', 'noauth')
+        sessionStorage.setItem('DiabildAuthState', 'noauth');
+        console.log(getOAuthState())
     }
 
 
-    function generateCodeChallenge(){ //TODO стоит ли после получения токена подчищать?
-        sessionStorage.setItem(
-            'DiabildAuthCodeVerifier', //TODO: необходимо написать генератор
-            'VGMB4QY13C24L83RFK0G9U7G49VKIVLM3ELIVRTAGDAGTV6A52C191S93I105W2AE1EITCET4IJ7ZBYVQHDMW38CG9V0MLCTNPUIJFFSDKE4DGFGVNOVW1TVWO76PX');
-        sessionStorage.setItem('DiabildAuthCodeChallenge', '4SsOYQmOG5m2BXt-oiqAWVa_lAWFpQsWsvBOiD09C10');
+    async function generateCodeChallenge() {
+        const randomLength = Math.floor(Math.random() * (128 - 43 + 1)) + 43;
+        let codeVerifier = Array.from({length: randomLength}, () => Math.floor(Math.random() * 36).toString(36)).join('');
 
+        let encoder = new TextEncoder();
+        let data = encoder.encode(codeVerifier);
+
+        let digest = await window.crypto.subtle.digest('SHA-256', data);
+        let digestArray = new Uint8Array(digest);
+        let stringChars = Array.from(digestArray).map(byte => String.fromCharCode(byte)).join('');
+        let base64Digest = btoa(stringChars);
+        let codeChallenge = base64Digest.replace(/\+/g, '-').replace(/\//g, '_').replace(/ = /g, '');
+
+        // It is not possible in JavaScript to generate a urlsafe base64 without a third-party library
+        // So we need to manually replace '+' with '-', '/' with '_' and remove trailing '='
+        codeVerifier = btoa(codeVerifier).replace(/\+/g, '-').replace(/\//g, '_').replace(/ = /g, '');
+
+        window.sessionStorage.setItem('DiabildAuthCodeVerifier', codeVerifier);
+        window.sessionStorage.setItem('DiabildAuthCodeChallenge', codeChallenge);
     }
+
 
     async function authorize() {
 
+        const oAuthState = getOAuthState()
         console.log("STATE", oAuthState)
+
         // Нет токена
         // Начальная стадия (редирект на сервер авторизации)
         if (oAuthState === "noauth"){
@@ -92,8 +113,9 @@ export default function useOAuth(){
             params.append('redirect_uri', `${window.location.protocol}//${window.location.host}`);
             params.append('client_id', variables.client_id);
             params.append('response_type', 'code');
-            sessionStorage.setItem('DiabildAuthState', 'wait_code')
+            sessionStorage.setItem('DiabildAuthState', 'wait_code');
             window.location.href = `${variables.backend_url}/oauth/authorize/?` + params.toString();
+
         }
         // Вторая стадия (получение кода авторизации и отправка запроса на обмен токена)
         else if (oAuthState === "wait_code"){
@@ -123,7 +145,8 @@ export default function useOAuth(){
 
                 if (!response.ok) {
                     sessionStorage.removeItem("DiabildAuthState")
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    alert("Авторизация не удалась! Попробуйте обновить страницу.")
+                    // throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
@@ -132,7 +155,6 @@ export default function useOAuth(){
                 const {access_token, expires_in, refresh_token} = data;
 
                 sessionStorage.removeItem('DiabildAuthState')
-                oAuthState = null;
                 document.cookie = `access_token=${access_token}; expires=${expires_in}; path=/`;
                 document.cookie = `refresh_token=${refresh_token}; expires=${expires_in}; path=/`;
 
@@ -149,6 +171,8 @@ export default function useOAuth(){
         }
 
 
+
+
         //TODO проработать ситуацию когда есть refresh_token
     }
     
@@ -156,7 +180,7 @@ export default function useOAuth(){
     return {
         getCookie,
         fetchAPI,
-        oAuthState,
+        getOAuthState,
         beginAuth,
         authorize
     }
