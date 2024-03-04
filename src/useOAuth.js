@@ -71,6 +71,8 @@ export default function useOAuth(){
 
     function beginAuth(){
         sessionStorage.setItem('DiabildAuthState', 'noauth');
+        // generateCodeChallenge().then(r => null)
+
         console.log(getOAuthState())
     }
 
@@ -80,17 +82,24 @@ export default function useOAuth(){
         let codeVerifier = Array.from({length: randomLength}, () => Math.floor(Math.random() * 36).toString(36)).join('');
 
         let encoder = new TextEncoder();
-        let data = encoder.encode(codeVerifier);
 
-        let digest = await window.crypto.subtle.digest('SHA-256', data);
-        let digestArray = new Uint8Array(digest);
-        let stringChars = Array.from(digestArray).map(byte => String.fromCharCode(byte)).join('');
-        let base64Digest = btoa(stringChars);
-        let codeChallenge = base64Digest.replace(/\+/g, '-').replace(/\//g, '_').replace(/ = /g, '');
+// Преобразование code_verifier в base64
+        let base64CodeVerifier = btoa(codeVerifier);
+
+// Преобразование base64 строки в байты
+        let base64CodeVerifierData = encoder.encode(base64CodeVerifier);
+
+// Хеширование
+        let hash= await window.crypto.subtle.digest('SHA-256', base64CodeVerifierData)//.then(r => {
+        //     hash = r;
+        // });
+
+        let buffer = new Uint8Array(hash);
+        let base64Hash = btoa(String.fromCharCode.apply(null, buffer));
 
         // It is not possible in JavaScript to generate a urlsafe base64 without a third-party library
         // So we need to manually replace '+' with '-', '/' with '_' and remove trailing '='
-        codeVerifier = btoa(codeVerifier).replace(/\+/g, '-').replace(/\//g, '_').replace(/ = /g, '');
+        let codeChallenge = base64Hash.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
         window.sessionStorage.setItem('DiabildAuthCodeVerifier', codeVerifier);
         window.sessionStorage.setItem('DiabildAuthCodeChallenge', codeChallenge);
@@ -106,7 +115,7 @@ export default function useOAuth(){
         // Начальная стадия (редирект на сервер авторизации)
         if (oAuthState === "noauth"){
             console.log("noauth")
-            generateCodeChallenge()
+            await generateCodeChallenge();
             let params = new URLSearchParams();
             params.append('code_challenge', sessionStorage.getItem('DiabildAuthCodeChallenge'));
             params.append('code_challenge_method', 'S256');

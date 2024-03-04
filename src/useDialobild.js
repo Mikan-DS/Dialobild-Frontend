@@ -20,6 +20,7 @@ export default function useDialobild() {
             if (!fetchState){
                 fetchState = true;
 
+                console.log(sessionStorage.getItem('DiabildAuthCodeChallenge'), sessionStorage.getItem('DiabildAuthCodeVerifier'))
 
                 let response = null;
 
