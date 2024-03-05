@@ -121,7 +121,7 @@ export default function useDialobild() {
 
         // setNodes([...nodes]);
 
-        updateNodeProperty();
+        // updateNodeProperty();
 
         return newNode;
     }
@@ -269,8 +269,8 @@ export default function useDialobild() {
                 newNode.rules.mustHave.push(node.id)
             }
 
-            setNodes([...nodes])
-
+            // setNodes([...nodes])
+            updateNodeProperty();
         }
 
         return callback
@@ -402,10 +402,16 @@ export default function useDialobild() {
         return "solid #0000"
     }
 
+    function createClearAndSave() {
+        const newNode = createClearNode({x: 0, y:0})
+        updateNodeProperty()
+
+    }
+
     return {
         nodes,
         setNodes,
-        createClearNode,
+        createClearNode: createClearAndSave,
         getNodeAtLocation,
         getLayers,
         getWidth,

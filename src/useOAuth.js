@@ -159,13 +159,7 @@ export default function useOAuth(){
                 alert("Авторизация не удалась! Попробуйте обновить страницу.")
                 sessionStorage.removeItem("DiabildAuthState")
             }
-
-
-
         }
-
-
-
 
         //TODO проработать ситуацию когда есть refresh_token
     }
