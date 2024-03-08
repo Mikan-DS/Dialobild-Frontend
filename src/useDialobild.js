@@ -13,6 +13,24 @@ export default function useDialobild() {
 
     const [projects, setProjects] = useState({})
 
+    const targetProject = "Active";
+
+    const [nodes, setNodes] = useState([]);
+    const [activeProject, setActiveProject] = useState(null);
+
+    const [activeNode, setActiveNode] = useState(null)
+    const [selectionMode, setSelectionMode] = useState(null)
+    const [nodeTypes, setNodeTypes] = useState({
+        ask: "#93af93",
+        answer: "#7888f3"
+    })
+    const [ruleTypes, setRuleTypes] = useState({
+
+    })
+
+    const [defaultRuleType, setDefaultRuleType] = useState(null)
+
+
     useEffect( () => {
 
         async function fetchData(){
@@ -41,20 +59,27 @@ export default function useDialobild() {
                     await oAuth.authorize()
                     if (!oAuth.getOAuthState()){
                         response = await oAuth.fetchAPI(`${variables.backend_url}/api/projects/`);
-                        console.log(response)
                     }
                 }
 
                 if (response){
                     setProjects(response)
 
+
+                    // TODO: Когда фронт будет приклеен к бэку - доставать targetProject из ссылки
+                    let activeProjectId = Object.keys(response).find(key => response[key] === targetProject);
+
+                    if (!activeProjectId) {
+                        activeProjectId = Object.keys(response).pop();
+                    }
+
                     setActiveProject({
-                        id:6,
-                        name:"Test project"
+                        id: activeProjectId,
+                        name: response[activeProjectId]
                     })
 
 
-                    const project = await oAuth.fetchAPI(`${variables.backend_url}/api/project/id/6/`)
+                    const project = await oAuth.fetchAPI(`${variables.backend_url}/api/project/id/${activeProjectId}/`)
 
                     nodes.length = 0
                     nodes.push(...project.nodes)
@@ -64,29 +89,30 @@ export default function useDialobild() {
                         return acc;
                     }, {}))
 
+                    setRuleTypes(project.ruleTypes.reduce((acc, type) => {
+                        acc[type.code] = {
+                            name: type.name,
+                            color: type.color,
+                            arrowStyle: type.arrowStyle
+                        };
+                        return acc;
+                    }, {}));
+
+                    setDefaultRuleType(project.defaultRuleType)
 
 
                     updateNodeProperty()
                 }
 
-
             }
 
         }
-        fetchData();
+        fetchData().then(r => null);
 
 
     }, [])
 
-    const [nodes, setNodes] = useState([]);
-    const [activeProject, setActiveProject] = useState(null);
 
-    const [activeNode, setActiveNode] = useState(null)
-    const [selectionMode, setSelectionMode] = useState(null)
-    const [nodeTypes, setNodeTypes] = useState({
-        ask: "#93af93",
-        answer: "#7888f3"
-    })
 
 
     const selectionModes = {
@@ -101,27 +127,23 @@ export default function useDialobild() {
     function createClearNode({x, y}) {
 
         const id = nodes.length === 0 ? 1 : Math.max(...nodes.map(node => node.id)) + 1;
-        // let x = 1;
-        // const y = 1;
+
         const targetLocation = {x: x?x:1, y: y?y:1}
 
         while(getNodeAtLocation(targetLocation.x, targetLocation.y)) {
             targetLocation.x++;
         }
 
-        const nodeType = 'ask';
+        const nodeType = Object.keys(nodeTypes)[0];
         const content = '???';
-        const rules = {mustHave: [], mustNotHave: [], mustHaveAll: []};
-        const statements = []; //TODO
-        // const location = {x, y}
+        const rules = Object.keys(ruleTypes).reduce((acc, type) => {
+            acc[type] = [];
+            return acc;
+        }, {});
 
-        const newNode = { id, location:targetLocation, nodeType, content, rules, statements };
+        const newNode = { id, location:targetLocation, nodeType, content, rules };
 
-        nodes.push(newNode);
-
-        // setNodes([...nodes]);
-
-        // updateNodeProperty();
+        nodes.push(newNode); // TODO: может перенести это во внешние функции?
 
         return newNode;
     }
@@ -209,46 +231,39 @@ export default function useDialobild() {
 
     function getLinks() {
 
-        const links = {mustHave: [], mustHaveAll: [], mustNotHave: []}
+        const links = Object.keys(ruleTypes).reduce((acc, type) => {
+            acc[type] = [];
+            return acc;
+        }, {});
 
         for (let i = 0; i<nodes.length; i++){
             let node = nodes[i]
 
+            if (node.location.x === 0 || node.location.y === 0){
+                continue;
+            }
 
-            if (!(node.rules.mustHave.length || node.rules.mustHaveAll.length)){
-                links.mustHave.push({
+
+            let noRules = true;
+
+            for (let key in ruleTypes) {
+                for (let l = 0; l<node.rules[key].length;l++){
+                    const rule = node.rules[key][l];
+                    noRules = false;
+                    links[key].push({
+                        startId: "node_"+rule,
+                        endId: "node_"+node.id
+                    })
+                }
+            }
+            if (noRules && defaultRuleType){
+                links[defaultRuleType].push({
                     startId: "createClearNode",
-                    endId: "node_"+node.id
-                })
-            }
-            for (let l = 0; l<node.rules.mustHave.length;l++){
-
-                const rule = node.rules.mustHave[l];
-                links.mustHave.push({
-                    startId: "node_"+rule,
-                    endId: "node_"+node.id
-                })
-            }
-            for (let l = 0; l<node.rules.mustHaveAll.length;l++){
-
-                const rule = node.rules.mustHaveAll[l];
-                links.mustHaveAll.push({
-                    startId: "node_"+rule,
-                    endId: "node_"+node.id
-                })
-            }
-
-            for (let l = 0; l<node.rules.mustNotHave.length;l++){
-
-                const rule = node.rules.mustNotHave[l];
-                links.mustNotHave.push({
-                    startId: "node_"+rule,
                     endId: "node_"+node.id
                 })
             }
 
         }
-
 
         return links;
 
@@ -307,8 +322,6 @@ export default function useDialobild() {
                         }
                     }
                 }
-
-
             }
         }
 
@@ -368,13 +381,17 @@ export default function useDialobild() {
                 removeFromList(node.id, activeNode.rules[selectionMode])
             }
             else {
-                removeFromList(node.id, activeNode.rules["mustHave"])
-                removeFromList(node.id, activeNode.rules["mustHaveAll"])
-                removeFromList(node.id, activeNode.rules["mustNotHave"])
+                for (let key in ruleTypes) {
+                    if(key === selectionMode) {
+                        activeNode.rules[key].push(node.id)
+                    } else {
+                        removeFromList(node.id, activeNode.rules[key])
+                    }
+                }
 
-                activeNode.rules[selectionMode].push(node.id)
             }
         }
+        console.log(selectionMode, activeNode.rules, node.rules, backward)
 
         updateNodeProperty()
     }
@@ -435,6 +452,8 @@ export default function useDialobild() {
         selectionModes,
         nodeSelectionOutline,
 
-        apiError
+        apiError,
+
+        ruleTypes
     }
 }

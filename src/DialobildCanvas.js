@@ -6,14 +6,9 @@ import {DndContext} from "@dnd-kit/core";
 
 export default function DialobildCanvas({dialobild}) {
     const style = {
-        // overflowX: 'auto',
         width: '100%',
-        // height: '100%',
         display: 'flex',
         flexWrap: 'wrap',
-
-        // justifyContent: 'center',
-        // alignItems: 'center',
     };
 
 
@@ -24,20 +19,14 @@ export default function DialobildCanvas({dialobild}) {
         justifyContent: 'center',
         alignItems: 'center',
 
-        // paddingLeft: "50%",
-
-        // minWidth: "100%",
-
         gap: 70,
     };
 
     useEffect(() => {
-        // console.log("TEST")
-        // console.log(document.getElementById("DialobildCanvas").getBoundingClientRect().width, document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width)
 
         if (document.getElementById("DialobildCanvas").getBoundingClientRect().width > document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width){
             document.getElementById("DialobildCanvas").style.justifyContent = 'center';
-            // console.log("SMALL")
+
         }
         else {
             document.getElementById("DialobildCanvas").style.justifyContent = "start";
@@ -68,14 +57,19 @@ export default function DialobildCanvas({dialobild}) {
                         <Layer key={"layer_" + layer.y} layer={layer} dialobild={dialobild}/>
                     ))}
                 </div>
-                {links.mustHave.map((rule, index) => (
-                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>
-                ))}
-                {links.mustHaveAll.map((rule, index) => (
-                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green" arrowStyle="4, 5"/>
-                ))}
-                {links.mustNotHave.map((rule, index) => (
-                    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="red"/>
+                {/*{links.mustHave.map((rule, index) => (*/}
+                {/*    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>*/}
+                {/*))}*/}
+                {/*{links.mustHaveAll.map((rule, index) => (*/}
+                {/*    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green" arrowStyle="4, 5"/>*/}
+                {/*))}*/}
+                {/*{links.mustNotHave.map((rule, index) => (*/}
+                {/*    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="red"/>*/}
+                {/*))}*/}
+                {Object.keys(links).map((key) => (
+                    links[key].map((rule, index) => (
+                        <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor={dialobild.ruleTypes[key].color}  arrowStyle={dialobild.ruleTypes[key].arrowStyle}/>
+                    ))
                 ))}
             </DndContext>
         </div>
