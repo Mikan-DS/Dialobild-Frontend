@@ -10,8 +10,6 @@ export default function DialobildCanvas({dialobild}) {
         display: 'flex',
         flexWrap: 'wrap',
     };
-
-
     const styleContainer = {
         flexWrap: 'wrap',
         display: 'flex',
@@ -23,10 +21,8 @@ export default function DialobildCanvas({dialobild}) {
     };
 
     useEffect(() => {
-
         if (document.getElementById("DialobildCanvas").getBoundingClientRect().width > document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width){
             document.getElementById("DialobildCanvas").style.justifyContent = 'center';
-
         }
         else {
             document.getElementById("DialobildCanvas").style.justifyContent = "start";
@@ -34,9 +30,7 @@ export default function DialobildCanvas({dialobild}) {
     }, [document.getElementById("DialobildCanvasContainer") && document.getElementById("DialobildCanvasContainer").getBoundingClientRect().width])
 
     const links = dialobild.getLinks()
-
     const arrowUpdates = []
-
     function updateArrows() {
         for (let i = 0; i<arrowUpdates.length; i++){
             arrowUpdates[i]();
@@ -57,15 +51,6 @@ export default function DialobildCanvas({dialobild}) {
                         <Layer key={"layer_" + layer.y} layer={layer} dialobild={dialobild}/>
                     ))}
                 </div>
-                {/*{links.mustHave.map((rule, index) => (*/}
-                {/*    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green"/>*/}
-                {/*))}*/}
-                {/*{links.mustHaveAll.map((rule, index) => (*/}
-                {/*    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="green" arrowStyle="4, 5"/>*/}
-                {/*))}*/}
-                {/*{links.mustNotHave.map((rule, index) => (*/}
-                {/*    <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor="red"/>*/}
-                {/*))}*/}
                 {Object.keys(links).map((key) => (
                     links[key].map((rule, index) => (
                         <NodeArrow key={index} startId={rule.startId} endId={rule.endId} updateArrows={arrowUpdates} arrowColor={dialobild.ruleTypes[key].color}  arrowStyle={dialobild.ruleTypes[key].arrowStyle}/>

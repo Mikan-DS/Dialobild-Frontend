@@ -7,29 +7,17 @@ let fetchState = false;
 
 export default function useDialobild() {
 
-    const [apiError, setApiError] = useState(null);
-
     const oAuth = useOAuth()
-
+    const [apiError, setApiError] = useState(null);
     const [projects, setProjects] = useState({})
-
     const targetProject = "Active";
-
     const [nodes, setNodes] = useState([]);
     const [activeProject, setActiveProject] = useState(null);
-
     const [activeNode, setActiveNode] = useState(null)
     const [selectionMode, setSelectionMode] = useState(null)
-    const [nodeTypes, setNodeTypes] = useState({
-        ask: "#93af93",
-        answer: "#7888f3"
-    })
-    const [ruleTypes, setRuleTypes] = useState({
-
-    })
-
+    const [nodeTypes, setNodeTypes] = useState({})
+    const [ruleTypes, setRuleTypes] = useState({})
     const [defaultRuleType, setDefaultRuleType] = useState(null)
-
 
     useEffect( () => {
 
@@ -100,29 +88,12 @@ export default function useDialobild() {
 
                     setDefaultRuleType(project.defaultRuleType)
 
-
                     updateNodeProperty()
                 }
-
             }
-
         }
         fetchData().then(r => null);
-
-
     }, [])
-
-
-
-
-    const selectionModes = {
-        null: "solid #0000",
-        "mustHave": "solid #0F0F",
-        "mustHaveAll": "solid #00FF",
-        "mustNotHave": "solid #F00F",
-        "self": "dash #F0FF",
-    }
-
 
     function createClearNode({x, y}) {
 
@@ -147,12 +118,9 @@ export default function useDialobild() {
 
         return newNode;
     }
-
-
     function getNodeAtLocation(x, y) {
         return nodes.find(node => node.location.x === x && node.location.y === y);
     }
-
     function getLayers () {
         const layers = [];
         let i = 1
@@ -165,21 +133,14 @@ export default function useDialobild() {
                 layers.push({y: i, nodes: nodesInLayer});
             }
         }
-
         layers.push({y: i, nodes: []});
-
         return layers;
     }
-
     function getWidth(){
         return Math.max(...nodes.map(node => node.location.x));
     }
-
     function isAllowedCell({activeNode, cellLocation}){
         const node = getNodeAtLocation((cellLocation.x+1) / 2, cellLocation.y)
-
-
-
         if (activeNode){
 
             if (node && node.location === activeNode.location){
@@ -188,11 +149,8 @@ export default function useDialobild() {
 
             return !(activeNode.data.current.node.location.y === cellLocation.y && Math.abs((activeNode.data.current.node.location.x * 2 - 1) - cellLocation.x) === 1)
         }
-
         return false;
-
     }
-
     function moveNodeToLocation({node, targetLocation}){
         let lastNode = node
         for (let i = targetLocation.x; i <= getWidth()+1; i++){
@@ -209,7 +167,6 @@ export default function useDialobild() {
 
         updateNodeProperty();
     }
-
     function moveNodeToCell({active, over}){
 
         if (!over){
@@ -228,24 +185,17 @@ export default function useDialobild() {
         moveNodeToLocation({node, targetLocation})
 
     }
-
     function getLinks() {
-
         const links = Object.keys(ruleTypes).reduce((acc, type) => {
             acc[type] = [];
             return acc;
         }, {});
-
         for (let i = 0; i<nodes.length; i++){
-            let node = nodes[i]
-
+            let node = nodes[i];
             if (node.location.x === 0 || node.location.y === 0){
                 continue;
             }
-
-
             let noRules = true;
-
             for (let key in ruleTypes) {
                 for (let l = 0; l<node.rules[key].length;l++){
                     const rule = node.rules[key][l];
@@ -262,36 +212,28 @@ export default function useDialobild() {
                     endId: "node_"+node.id
                 })
             }
-
         }
-
         return links;
-
     }
-
     function addNewNodeToLocationWrap({node, targetLocation}) {
-
         function callback() {
-
             const newNode = createClearNode(targetLocation)
-
             moveNodeToLocation({node: newNode, targetLocation})
-
-            if (node.location.y === targetLocation.y){
-                newNode.rules.mustHave = [...node.rules.mustHave]
+            if (defaultRuleType !== null){
+                if (node.location.y === targetLocation.y){
+                    for (let ruleType in ruleTypes){
+                        newNode.rules[ruleType] = [...node.rules[ruleType]]
+                    }
+                }
+                else {
+                    newNode.rules[defaultRuleType].push(node.id)
+                }
             }
-            else {
-                newNode.rules.mustHave.push(node.id)
-            }
-
-            // setNodes([...nodes])
+            setActiveNode(newNode);
             updateNodeProperty();
         }
-
-        return callback
-
+        return callback;
     }
-
     function removeFromList(element, list){
         let index = list.indexOf(element);
         if (index > -1) {
@@ -299,7 +241,6 @@ export default function useDialobild() {
         }
 
     }
-
     function updateNodeProperty(){
 
         if (activeProject !== null){ //TODO чтобы уменьшить нагрузку - в будущем надо слать сами изменения
@@ -329,96 +270,66 @@ export default function useDialobild() {
 
 
     }
-
     function deleteNode(node){
-        const mustHave = node.rules.mustHave;
-
         nodes.map((element) => {
-            if (element.rules.mustHave.includes(node.id)){
-                removeFromList(node.id, element.rules.mustHave);
-                element.rules.mustHave = [...element.rules.mustHave, ...mustHave]
+            let inRules = false
+            for (let ruleType in ruleTypes){
+                if (element.rules[ruleType].includes(node.id)){
+                    removeFromList(node.id, element.rules[ruleType]);
+                    inRules = true;
+                }
+            }
+            if (inRules){
+                for (let ruleType in ruleTypes){
+                    element.rules[ruleType] = [...new Set([...element.rules[ruleType], ...node.rules[ruleType]])];
+                }
             }
         })
 
-        nodes.map((element) => {
-            if (element.rules.mustHaveAll.includes(node.id) || element.rules.mustNotHave.includes(node.id)){
-                removeFromList(node.id, element.rules.mustHave);
-                removeFromList(node.id, element.rules.mustNotHave);
-                element.rules.mustHave = [...element.rules.mustHave, ...mustHave]
-            }
-        })
-
-        removeFromList(node, nodes)
-
-        setActiveNode(null)
-        setSelectionMode(null)
-
-        updateNodeProperty()
-
+        removeFromList(node, nodes);
+        setActiveNode(null);
+        setSelectionMode(null);
+        updateNodeProperty();
     }
-
-    function toggleNodeSelection(node, backward=false){
+    function toggleNodeSelection(node){
 
         if (!activeNode || !selectionMode){
             setSelectionMode(null);
             return;
         }
-
         if (node.id === activeNode.id){
             return;
         }
-
-        if (backward){
-            if(node.rules[selectionMode].includes(activeNode.id)){
-                removeFromList(activeNode.id, node.rules[selectionMode])
-            }
-            else {
-                node.rules[selectionMode].push(activeNode.id)
-            }
+        if (activeNode.rules[selectionMode].includes(node.id)){
+            removeFromList(node.id, activeNode.rules[selectionMode]);
         }
         else {
-            if(activeNode.rules[selectionMode].includes(node.id)){
-                removeFromList(node.id, activeNode.rules[selectionMode])
-            }
-            else {
-                for (let key in ruleTypes) {
-                    if(key === selectionMode) {
-                        activeNode.rules[key].push(node.id)
-                    } else {
-                        removeFromList(node.id, activeNode.rules[key])
-                    }
+            for (let ruleType in ruleTypes){
+                if (ruleType === selectionMode){
+                    activeNode.rules[selectionMode].push(node.id);
                 }
-
+                else {
+                    removeFromList(node.id, activeNode.rules[ruleType]);
+                }
             }
         }
-        console.log(selectionMode, activeNode.rules, node.rules, backward)
-
-        updateNodeProperty()
+        updateNodeProperty();
     }
-
     function nodeSelectionOutline(node){
 
         if (!activeNode || !selectionMode){
             return "solid #0000"
         }
-
         if (activeNode.id === node.id){
             return "dashed #FF0F"
         }
-
-        if (activeNode.rules["mustHave"].includes(node.id)){
-            return selectionModes["mustHave"]
+        for (let key in ruleTypes) {
+            if (activeNode.rules[key].includes(node.id)){
+                return (ruleTypes[key].arrowStyle === "solid"? "solid ": "dashed ")+ruleTypes[key].color;
+            }
         }
-        else if (activeNode.rules["mustHaveAll"].includes(node.id)){
-            return selectionModes["mustHaveAll"]
-        }
-        else if (activeNode.rules["mustNotHave"].includes(node.id)){
-            return selectionModes["mustNotHave"]
-        }
-
-        return "solid #0000"
+        return "solid #0000";
     }
-
     function createClearAndSave() {
         const newNode = createClearNode({x: 0, y:0})
         updateNodeProperty()
@@ -449,7 +360,6 @@ export default function useDialobild() {
         setSelectionMode,
 
         toggleNodeSelection,
-        selectionModes,
         nodeSelectionOutline,
 
         apiError,
