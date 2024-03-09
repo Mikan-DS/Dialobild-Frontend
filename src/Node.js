@@ -27,7 +27,7 @@ export default function Node({node, dialobild}) {
     }
 
     const style = {
-        backgroundColor: dialobild.nodeTypes[node.nodeType],
+        backgroundColor: dialobild.nodeTypes[node.nodeType].color,
         borderRadius: '10px',
         width: nodeWidth,
         minHeight: '50px',
@@ -62,7 +62,17 @@ export default function Node({node, dialobild}) {
         <div className="NodeHolder" style={holderStyle}>
             <button style={buttonStyle} onClick={dialobild.createNewNode({node, targetLocation:{x: location.x-1, y: location.y}})}>+</button>
             <div style={{display: 'flex', flexDirection: 'column'}}>
-                <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...attribs}>
+                <div id={nodeId} style={style} className="Node" ref={setNodeRef} {...attribs}
+                     onKeyDown={(event) => {
+                         if (event.key === 'Delete') {
+                             dialobild.deleteNode(node);
+                         }
+                     }}
+                     onContextMenu={(event) => {
+                         // Предотвращаем появление контекстного меню браузера
+                         event.preventDefault();
+                         dialobild.setActiveNode(node);
+                     }}>
                     {nodeContent}
                 </div>
                 <button style={buttonStyle} onClick={dialobild.createNewNode({node, targetLocation:{x: location.x, y: location.y+1}})}>+</button>

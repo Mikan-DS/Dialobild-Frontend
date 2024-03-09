@@ -74,7 +74,10 @@ export default function useDialobild() {
                     nodes.push(...project.nodes)
 
                     setNodeTypes(project.nodeTypes.reduce((acc, obj) => { //TODO нужно переделать так, чтобы обозначения можно было читать везде
-                        acc[obj.code] = obj.color;
+                        acc[obj.code] = {
+                            color:obj.color,
+                            name:obj.name
+                        };
                         return acc;
                     }, {}))
 
@@ -222,6 +225,7 @@ export default function useDialobild() {
                     for (let ruleType in ruleTypes){
                         newNode.rules[ruleType] = [...node.rules[ruleType]]
                     }
+                    newNode.nodeType = node.nodeType;
                 }
                 else {
                     newNode.rules[defaultRuleType].push(node.id)

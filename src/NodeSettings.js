@@ -50,7 +50,7 @@ export default function NodeSettings({dialobild}){
                             dialobild.updateNodeProperty();
                         }}>
                             {Object.keys(dialobild.nodeTypes).map((type) => (
-                                <option key={type} value={type} defaultValue={type === dialobild.activeNode.nodeType}>{type}</option>
+                                <option key={type} value={type} defaultValue={type === dialobild.activeNode.nodeType}>{dialobild.nodeTypes[type].name}</option>
                             ))}
                         </select>
 
