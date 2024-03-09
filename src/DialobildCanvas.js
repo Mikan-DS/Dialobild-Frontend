@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import Layer from './Layer';
-import Xarrow, {useXarrow, Xwrapper} from "react-xarrows";
 import NodeArrow from "./NodeArrow";
 import {DndContext} from "@dnd-kit/core";
 

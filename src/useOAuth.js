@@ -1,4 +1,3 @@
-import {useEffect} from "react";
 import variables from "./variables.json"
 
 export default function useOAuth(){

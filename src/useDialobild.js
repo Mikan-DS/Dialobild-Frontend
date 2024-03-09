@@ -370,5 +370,9 @@ export default function useDialobild() {
 
         isSettingOpen,
         toggleSettingOpen,
+
+        projects,
+        setApiError,
+        activeProject
     }
 }

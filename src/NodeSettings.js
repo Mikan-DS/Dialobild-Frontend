@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 export default function NodeSettings({dialobild}){
-//     const [isOpen, setIsOpen] = useState(true);
-//
-//     const toggleOpen = () => {
-//         setIsOpen(!isOpen);
-//     };
 
     const buttonStyles = {
         position: 'fixed',

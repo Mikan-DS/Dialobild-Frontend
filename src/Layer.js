@@ -4,7 +4,6 @@ import Cell from './Cell';
 export default function Layer({layer, dialobild}) {
     const style = {
         borderRadius: '10px',
-        // backgroundColor: 'beige',
 
         display: 'flex',
         justifyContent: 'center',
@@ -14,12 +13,8 @@ export default function Layer({layer, dialobild}) {
 
         minHeight: '70px',
         height: 'max-content',
-        //
-        flexDirection: "row",
-
-        // gap: 10,
+        flexDirection: "row"
     };
-
 
     return (
         <div id={"layer_" + layer.y}  style={style} className="Layer">
