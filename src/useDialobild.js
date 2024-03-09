@@ -18,6 +18,7 @@ export default function useDialobild() {
     const [nodeTypes, setNodeTypes] = useState({})
     const [ruleTypes, setRuleTypes] = useState({})
     const [defaultRuleType, setDefaultRuleType] = useState(null)
+    const [isSettingOpen, setIsSettingOpen] = useState(false);
 
     useEffect( () => {
 
@@ -95,6 +96,9 @@ export default function useDialobild() {
         fetchData().then(r => null);
     }, [])
 
+    function toggleSettingOpen(){
+        setIsSettingOpen(!isSettingOpen);
+    }
     function createClearNode({x, y}) {
 
         const id = nodes.length === 0 ? 1 : Math.max(...nodes.map(node => node.id)) + 1;
@@ -139,15 +143,15 @@ export default function useDialobild() {
     function getWidth(){
         return Math.max(...nodes.map(node => node.location.x));
     }
-    function isAllowedCell({activeNode, cellLocation}){
+    function isAllowedCell({draggingNode, cellLocation, over}){
         const node = getNodeAtLocation((cellLocation.x+1) / 2, cellLocation.y)
-        if (activeNode){
-
+        if (draggingNode){
             if (node && node.location === activeNode.location){
                 return false;
             }
-
-            return !(activeNode.data.current.node.location.y === cellLocation.y && Math.abs((activeNode.data.current.node.location.x * 2 - 1) - cellLocation.x) === 1)
+            if (draggingNode.rect.current.initial !== null && draggingNode.rect.current.translated !== null && JSON.stringify(draggingNode.rect.current.initial) !== JSON.stringify(draggingNode.rect.current.translated)){
+                return !(activeNode.location.y === cellLocation.y && Math.abs((activeNode.location.x * 2 - 1) - cellLocation.x) === 1)
+            }
         }
         return false;
     }
@@ -164,25 +168,19 @@ export default function useDialobild() {
                 lastNode = currentNode;
             }
         }
-
         updateNodeProperty();
     }
     function moveNodeToCell({active, over}){
-
         if (!over){
             return;
         }
-
-        const node = active.data.current.node
-        const cellLocation = over.data.current.cellLocation
-
-        if (!isAllowedCell({activeNode: active, cellLocation: cellLocation} ) || (over.data.current.node && node.id === over.data.current.node.id)){
+        const node = active.data.current.node;
+        const cellLocation = over.data.current.cellLocation;
+        if (!isAllowedCell({draggingNode: active, cellLocation: cellLocation} ) || (over.data.current.node && node.id === over.data.current.node.id)){
             return;
         }
-
-        let targetLocation = {x: Math.floor(cellLocation.x/2)+1, y:cellLocation.y}
-
-        moveNodeToLocation({node, targetLocation})
+        let targetLocation = {x: Math.floor(cellLocation.x/2)+1, y:cellLocation.y};
+        moveNodeToLocation({node, targetLocation});
 
     }
     function getLinks() {
@@ -231,6 +229,7 @@ export default function useDialobild() {
             }
             setActiveNode(newNode);
             updateNodeProperty();
+            setIsSettingOpen(true);
         }
         return callback;
     }
@@ -317,6 +316,9 @@ export default function useDialobild() {
     }
     function nodeSelectionOutline(node){
 
+        if (activeNode !== null && activeNode.id === node.id){
+            return "solid #FF0F"
+        }
         if (!activeNode || !selectionMode){
             return "solid #0000"
         }
@@ -364,6 +366,9 @@ export default function useDialobild() {
 
         apiError,
 
-        ruleTypes
+        ruleTypes,
+
+        isSettingOpen,
+        toggleSettingOpen,
     }
 }

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
 export default function NodeSettings({dialobild}){
-    const [isOpen, setIsOpen] = useState(true);
-
-    const toggleOpen = () => {
-        setIsOpen(!isOpen);
-    };
+//     const [isOpen, setIsOpen] = useState(true);
+//
+//     const toggleOpen = () => {
+//         setIsOpen(!isOpen);
+//     };
 
     const buttonStyles = {
         position: 'fixed',
         top: '50%',
-        right: isOpen ? '33%' : '0',
+        right: dialobild.isSettingOpen ? '33%' : '0',
         transform: 'translateY(-50%) rotate(-90deg)',
     };
 
@@ -20,7 +20,7 @@ export default function NodeSettings({dialobild}){
         top: '10%',
         width: '33%',
         height: '80%',
-        padding: isOpen ? '1em' : 'none',
+        padding: dialobild.isSettingOpen ? '1em' : 'none',
         backgroundColor: 'lightgray',
         border: '1px solid black',
         transition: 'width 0.3s ease',
@@ -36,10 +36,10 @@ export default function NodeSettings({dialobild}){
             {dialobild.activeNode &&
                 <button
                     style={buttonStyles}
-                    onClick={toggleOpen}> {isOpen ? 'Закрыть' : 'Открыть'} {dialobild.activeNode && "узел " + dialobild.activeNode.id}
+                    onClick={dialobild.toggleSettingOpen}> {dialobild.isSettingOpen ? 'Закрыть' : 'Открыть'} {dialobild.activeNode && "узел " + dialobild.activeNode.id}
                 </button>}
 
-            {dialobild.activeNode && isOpen &&
+            {dialobild.activeNode && dialobild.isSettingOpen &&
                 <div style={containerStyles}>
                     <div style={{textAlign: "left"}}>
                         <h3 style={{textAlign: "center"}}>Характеристики узла №{dialobild.activeNode.id}</h3>
@@ -77,31 +77,17 @@ export default function NodeSettings({dialobild}){
                             </div>
                         }
 
-                        <hr/>
-                        Активно если одно из:
-
-                        {dialobild.selectionMode !== "mustHave" &&
-                            <button onClick={() => dialobild.setSelectionMode("mustHave")}>
-                                Изменить
-                            </button>
-                        }
-
-
-                        <hr/>
-                        Активно если все из:
-                        {dialobild.selectionMode !== "mustHaveAll" &&
-                            <button onClick={() => dialobild.setSelectionMode("mustHaveAll")}>
-                                Изменить
-                            </button>
-                        }
-
-                        <hr/>
-                        Неактивно если хотя бы одно из:
-                        {dialobild.selectionMode !== "mustNotHave" &&
-                            <button onClick={() => dialobild.setSelectionMode("mustNotHave")}>
-                                Изменить
-                            </button>
-                        }
+                        {Object.keys(dialobild.ruleTypes).map((key) => (
+                            <div>
+                                <hr/>
+                                {dialobild.ruleTypes[key].name}
+                                {dialobild.selectionMode !== key &&
+                                    <button onClick={() => dialobild.setSelectionMode(key)}>
+                                        Изменить
+                                    </button>
+                                }
+                            </div>
+                        ))}
                     </div>
                 </div>}
         </div>

@@ -7,7 +7,7 @@ function App() {
 
     const dialobild = useDialobild()
 
-    document.dd = dialobild;
+    document.dd = dialobild; //TODO: only for debug
 
     return (
     <div className="App">
@@ -20,10 +20,6 @@ function App() {
                 <NodeSettings dialobild={dialobild}/>
             </>
         )}
-
-
-        {/*<DebugContainer/>*/}
-        {/*<CanvasButton></CanvasButton>*/}
 
         <a href="/?startagain">Обновить</a>
 

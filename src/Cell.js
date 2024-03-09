@@ -10,17 +10,12 @@ export default function Cell({dialobild, cellLocation}) {
 
     const {setNodeRef, over, active} = useDroppable({
         id: cellId,
-        // disabled: node
         data: {cellLocation, node}
     })
 
     let isOver = over&&over.id===cellId
 
-    let isDisabled = !dialobild.isAllowedCell({activeNode:active, cellLocation:cellLocation})//node || (active && active.data.current.node.location.y === cellLocation.y && Math.abs((active.data.current.node.location.x * 2 - 1) - cellLocation.x) === 1)
-
-
-    // isOver = true;
-    // isDisabled = false;
+    let isDisabled = !dialobild.isAllowedCell({draggingNode:active, cellLocation:cellLocation, over})
 
     const style = {
         backgroundColor: isDisabled? undefined: (isOver? 'lightpink': "#F991"),
