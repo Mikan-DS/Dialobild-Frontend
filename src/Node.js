@@ -11,9 +11,6 @@ export default function Node({node, dialobild}) {
         id: nodeId,
         data: {node}
     });
-
-
-
     let nodeContent = node.content;
 
     if (nodeContent.length > 80) {
@@ -28,8 +25,6 @@ export default function Node({node, dialobild}) {
             nodeWidth = 350;
         }
     }
-
-    // console.log(dialobild.nodeTypes, node.nodeType)
 
     const style = {
         backgroundColor: dialobild.nodeTypes[node.nodeType],

@@ -3,25 +3,26 @@ import DialobildCanvas from "./DialobildCanvas";
 import useDialobild from "./useDialobild";
 import NodeSettings from "./NodeSettings";
 
-function App() {
+export default function App() {
 
     const dialobild = useDialobild()
 
-    document.dd = dialobild;
+    document.dd = dialobild; //TODO: only for debug
 
     return (
     <div className="App">
-
-        <DialobildCanvas dialobild={dialobild}/>
-        <NodeSettings dialobild={dialobild}/>
-        {/*<DebugContainer/>*/}
-        {/*<CanvasButton></CanvasButton>*/}
-
+        {dialobild.activeProject === null ? (
+            <div>{dialobild.apiError?
+                <p>Проект не загружен: {dialobild.apiError}</p>:
+                <p>Загрузка...</p>
+            }</div>
+        ) : (
+            <>
+                <DialobildCanvas dialobild={dialobild}/>
+                <NodeSettings dialobild={dialobild}/>
+            </>
+        )}
+        <a href="/?startagain">Обновить</a>
     </div>
     );
-
 }
-
-
-
-export default App;

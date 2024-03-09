@@ -22,9 +22,6 @@ export default function NodeArrow({ startId, endId, updateArrows, arrowColor, ar
     const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
     const updateArrow = (event) => {
-
-
-
         const startElement = document.getElementById(startId);
         const endElement = document.getElementById(endId);
         if (startElement && endElement) {
@@ -65,7 +62,6 @@ export default function NodeArrow({ startId, endId, updateArrows, arrowColor, ar
             }
         };
     }, []); // Следит за изменениями после рендера
-
 
     return ( // Решить проблему с расширением экрана
         <svg style={{position: 'absolute', top: scrollTop, left: scrollLeft, width: '100%', height: '100%', pointerEvents: 'none', zIndex:-1}}>
