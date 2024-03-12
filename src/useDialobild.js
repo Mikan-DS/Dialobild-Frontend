@@ -341,6 +341,34 @@ export default function useDialobild() {
         updateNodeProperty()
 
     }
+    async function sendRawNodes(text) {
+        if (activeProject !== null){
+            const response = await oAuth.fetchAPI(variables.backend_url+"/api/project/add_raw_nodes/", {
+                project_id: activeProject.id,
+                active_node: activeNode.id,
+                text
+            })
+
+            if (response.error === 0){
+
+                for (let nodeId = 0; nodeId < response.update.length; nodeId++){
+
+                    let node = response.update[nodeId];
+
+                    let foundNode = nodes.find(n => n.id === node.id);
+
+                    if (foundNode) {
+                        foundNode.location = node.location; // Обновляем объект, если он найден
+                    } else {
+                        nodes.push(node); // Добавляем node в список, если он не найден
+                    }
+                }
+
+            }
+        }
+
+        setNodes([...nodes])
+    }
 
     return {
         nodes,
@@ -377,6 +405,8 @@ export default function useDialobild() {
 
         projects,
         setApiError,
-        activeProject
+        activeProject,
+
+        sendRawNodes
     }
 }

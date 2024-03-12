@@ -2,6 +2,7 @@ import './App.css';
 import DialobildCanvas from "./DialobildCanvas";
 import useDialobild from "./useDialobild";
 import NodeSettings from "./NodeSettings";
+import SideMenu from "./SideMenu";
 
 export default function App() {
 
@@ -20,6 +21,7 @@ export default function App() {
             <>
                 <DialobildCanvas dialobild={dialobild}/>
                 <NodeSettings dialobild={dialobild}/>
+                <SideMenu dialobild={dialobild}/>
             </>
         )}
         <a href="/?startagain">Обновить</a>
