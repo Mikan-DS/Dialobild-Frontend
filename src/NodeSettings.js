@@ -45,12 +45,12 @@ export default function NodeSettings({dialobild}){
                                          }}/>
 
                         Тип узла:
-                        <select onChange={(e) => {
+                        <select key={"select_type_"+dialobild.activeNode.nodeType} defaultValue={dialobild.activeNode.nodeType} onChange={(e) => {
                             dialobild.activeNode.nodeType = e.target.value;
                             dialobild.updateNodeProperty();
                         }}>
                             {Object.keys(dialobild.nodeTypes).map((type) => (
-                                <option key={type} value={type} defaultValue={type === dialobild.activeNode.nodeType}>{dialobild.nodeTypes[type].name}</option>
+                                <option key={type} value={type}>{dialobild.nodeTypes[type].name}</option>
                             ))}
                         </select>
 
