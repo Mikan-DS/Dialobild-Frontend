@@ -42,7 +42,6 @@ export default function useDialobild() {
                         console.log(response)
                     }
                 }
-                console.log(oAuth.getOAuthState())
 
                 if (oAuth.getOAuthState()){
                     await oAuth.authorize()
@@ -90,14 +89,19 @@ export default function useDialobild() {
                         return acc;
                     }, {}));
 
-                    setDefaultRuleType(project.defaultRuleType)
+                    setDefaultRuleType(project.defaultRuleType);
 
-                    updateNodeProperty()
+                    updateNodeProperty();
+                    scrollToUpperCenter();
                 }
             }
         }
         fetchData().then(r => null);
     }, [])
+
+    function scrollToUpperCenter() {
+        document.documentElement.scrollTo((document.documentElement.scrollWidth - document.documentElement.clientWidth) / 2, 0);
+    }
 
     function toggleSettingOpen(){
         setIsSettingOpen(!isSettingOpen);
