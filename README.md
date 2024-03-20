@@ -48,3 +48,4 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - [X] Стрелки должны иметь авто-ориентацию
 - [X] Добавить список правил в меню настройки узла
 - [ ] Добавить дебаг сценария
+- [ ] Пофиксить RAW формат создания узлов
