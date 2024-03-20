@@ -11,8 +11,6 @@ export default function SideMenu({dialobild}) {
 
     };
 
-        // sdaasd | test | <lol> sadas
-
     return <div style={containerStyles}>
         {dialobild.activeNode ?
             <button onClick={() => {
