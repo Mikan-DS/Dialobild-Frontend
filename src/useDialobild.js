@@ -52,52 +52,56 @@ export default function useDialobild() {
 
                 if (response){
                     setProjects(response)
+                    // let activeProjectId = Object.keys(response).find(key => response[key] === targetProject);
+                    //
+                    // if (!activeProjectId) {
+                    //     activeProjectId = Object.keys(response).pop();
+                    // }
+
+                    // await fetchProject(activeProjectId);
 
 
-                    // TODO: Когда фронт будет приклеен к бэку - доставать targetProject из ссылки
-                    let activeProjectId = Object.keys(response).find(key => response[key] === targetProject);
-
-                    if (!activeProjectId) {
-                        activeProjectId = Object.keys(response).pop();
-                    }
-
-                    setActiveProject({
-                        id: activeProjectId,
-                        name: response[activeProjectId]
-                    })
-
-
-                    const project = await oAuth.fetchAPI(`${variables.backend_url}/api/project/id/${activeProjectId}/`)
-
-                    nodes.length = 0
-                    nodes.push(...project.nodes)
-
-                    setNodeTypes(project.nodeTypes.reduce((acc, obj) => { //TODO нужно переделать так, чтобы обозначения можно было читать везде
-                        acc[obj.code] = {
-                            color:obj.color,
-                            name:obj.name
-                        };
-                        return acc;
-                    }, {}))
-
-                    setRuleTypes(project.ruleTypes.reduce((acc, type) => {
-                        acc[type.code] = {
-                            name: type.name,
-                            color: type.color,
-                            arrowStyle: type.arrowStyle
-                        };
-                        return acc;
-                    }, {}));
-
-                    setDefaultRuleType(project.defaultRuleType);
-
-                    updateNodeProperty();
-                    scrollToUpperCenter();
                 }
             }
         }
         fetchData().then(r => null);
     }, [])
+
+    async function fetchProject(projectId) {
+
+        setActiveProject({
+            id: projectId,
+            name: projects[projectId]
+        })
+
+
+        const project = await oAuth.fetchAPI(`${variables.backend_url}/api/project/id/${projectId}/`)
+
+        nodes.length = 0
+        nodes.push(...project.nodes)
+
+        setNodeTypes(project.nodeTypes.reduce((acc, obj) => { //TODO нужно переделать так, чтобы обозначения можно было читать везде
+            acc[obj.code] = {
+                color:obj.color,
+                name:obj.name
+            };
+            return acc;
+        }, {}))
+
+        setRuleTypes(project.ruleTypes.reduce((acc, type) => {
+            acc[type.code] = {
+                name: type.name,
+                color: type.color,
+                arrowStyle: type.arrowStyle
+            };
+            return acc;
+        }, {}));
+
+        setDefaultRuleType(project.defaultRuleType);
+
+        updateNodeProperty();
+        scrollToUpperCenter();
+    }
 
     function scrollToUpperCenter() {
         document.documentElement.scrollTo((document.documentElement.scrollWidth - document.documentElement.clientWidth) / 2, 0);
@@ -411,6 +415,8 @@ export default function useDialobild() {
         setApiError,
         activeProject,
 
-        sendRawNodes
+        sendRawNodes,
+        fetchProject,
+        logout: oAuth.logout
     }
 }

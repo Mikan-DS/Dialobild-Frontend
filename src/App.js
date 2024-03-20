@@ -1,30 +1,26 @@
 import './App.css';
-import DialobildCanvas from "./DialobildCanvas";
 import useDialobild from "./useDialobild";
-import NodeSettings from "./NodeSettings";
-import SideMenu from "./SideMenu";
+import React from "react";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import DialobildProjects from "./DialobildProjects";
+import DialobildApp from "./DialobildApp";
 
 export default function App() {
 
     const dialobild = useDialobild()
 
-    document.dd = dialobild; //TODO: only for debug
+    // document.dd = dialobild; //TODO: only for debug
 
     return (
     <div className="App">
-        {dialobild.activeProject === null ? (
-            <div>{dialobild.apiError?
-                <p>Проект не загружен: {dialobild.apiError}</p>:
-                <p>Загрузка...</p>
-            }</div>
-        ) : (
-            <>
-                <DialobildCanvas dialobild={dialobild}/>
-                <NodeSettings dialobild={dialobild}/>
-                <SideMenu dialobild={dialobild}/>
-            </>
-        )}
-        <a href="/?startagain">Обновить</a>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<DialobildProjects dialobild={dialobild}/>}/>
+                <Route path="/projects/:projectId" element={<DialobildApp dialobild={dialobild}/> }/>
+            </Routes>
+        </BrowserRouter>
+
+        {/*<a href="/?startagain">Обновить</a>*/}
     </div>
     );
 }
